@@ -8,6 +8,13 @@ logging:
     org.hibernate.type.descriptor.sql.BasicBinder: trace
 
 spring:
+  #
+  datasource:
+    url: jdbc:mysql://localhost:3306/fallsprbasic?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: root
+    password: password1222
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  #
   jpa:
     defer-datasource-initialization: true
     hibernate.ddl-auto: update
