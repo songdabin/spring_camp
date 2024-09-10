@@ -6,88 +6,111 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 </head>
 <body>
-    <div style="display: flex; flex-direction: column;">
-        <h4>
-            Detail
-        </h4>
+<div style="display: flex; flex-direction: column;">
+    <h4>
+        Detail
+    </h4>
 
-        <div>
-            Order
-            <input type="text" id="detail_board_order" disabled />
-            Title
-            <input type="text" id="detail_board_title" />
-            Content
-            <input type="text" id="detail_board_content" />
-            Author
-            <input type="text" id="detail_board_author" />
+    <div>
+        Id
+        <input type="text" id="detail_board_id" disabled/>
+        Title
+        <input type="text" id="detail_board_title"/>
+        Content
+        <input type="text" id="detail_board_content"/>
+        Author
+        <input type="text" id="detail_board_author"/>
 
-            <button onclick="update_board()">
-                edit
-            </button>
-        </div>
+        <button onclick="update_board()">
+            edit
+        </button>
+        <button onclick="delete_board()">
+            delete
+        </button>
     </div>
+</div>
 
-  <script>
-      // url에서 id값 추출
-      let temp_url = window.location.href;
-      let split_temp_url = temp_url.split('/');
-      let final_id = split_temp_url[split_temp_url.length - 1];
-      let split_q = final_id.split("?");
-      if (split_q.length > 0) {
-          final_id = split_q[0];
-      }
-
-      // document가 준비되면 detail_board() 실행
-      $( document ).ready(function () {
-          detail_board();
-      })
-
-      function update_board() {
-          $.ajax({
-              url: "/api/board/update",
-              type: "GET",
-              contentType : 'application/json; charset=utf-8',
-              data: {
-                  order : final_id,
-                  title: $("#detail_board_title").val(),
-                  content: $("#detail_board_content").val(),
-                  author: $("#detail_board_author").val(),
-              },
-              cache: false,
-              success: (obj_data, status, xhr)=>{
-                  alert(JSON.stringify(obj_data));
-              },
-              error: (obj_data, status, xhr)=>{
-                  alert("error!!");
-                  alert(JSON.stringify(obj_data));
-              }
-          });
-      }
-    function detail_board(){
-      $.ajax({
-        url: "/api/board/detail",
-        type: "GET",
-        contentType : 'application/json; charset=utf-8',
-        data: {
-          order : final_id
-        },
-        cache: false,
-        success: (obj_data, status, xhr)=>{
-          // alert(JSON.stringify(obj_data));
-          //   alert(obj_data["result_code"]);
-          //   alert(obj_data["detail_board"]["title"]);
-            $("#detail_board_order").val(obj_data.detail_board.order);
-            $("#detail_board_title").val(obj_data["detail_board"]["title"]);
-            $("#detail_board_content").val(obj_data["detail_board"]["content"]);
-            $("#detail_board_author").val(obj_data["detail_board"]["author"]);
-        },
-        error: (obj_data, status, xhr)=>{
-          alert("error!!");
-          alert(JSON.stringify(obj_data));
-        }
-      });
+<script>
+    // url에서 id값 추출
+    let temp_url = window.location.href;
+    let split_temp_url = temp_url.split('/');
+    let final_id = split_temp_url[split_temp_url.length - 1];
+    let split_q = final_id.split("?");
+    if (split_q.length > 0) {
+        final_id = split_q[0];
     }
-  </script>
+
+    // document가 준비되면 detail_board() 실행
+    $(document).ready(function () {
+        detail_board();
+    })
+
+    function update_board() {
+        $.ajax({
+            url: "/api/board/update",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            data: {
+                id: final_id,
+                title: $("#detail_board_title").val(),
+                content: $("#detail_board_content").val(),
+                author: $("#detail_board_author").val(),
+            },
+            cache: false,
+            success: (obj_data, status, xhr) => {
+                alert(JSON.stringify(obj_data));
+            },
+            error: (obj_data, status, xhr) => {
+                alert("error!!");
+                alert(JSON.stringify(obj_data));
+            }
+        });
+    }
+
+    function detail_board() {
+        $.ajax({
+            url: "/api/board/detail",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            data: {
+                id: final_id
+            },
+            cache: false,
+            success: (obj_data, status, xhr) => {
+                // alert(JSON.stringify(obj_data));
+                //   alert(obj_data["result_code"]);
+                //   alert(obj_data["detail_board"]["title"]);
+                $("#detail_board_id").val(obj_data.id);
+                $("#detail_board_title").val(obj_data["title"]);
+                $("#detail_board_content").val(obj_data["content"]);
+                $("#detail_board_author").val(obj_data["author"]);
+            },
+            error: (obj_data, status, xhr) => {
+                alert("error!!");
+                alert(JSON.stringify(obj_data));
+            }
+        });
+    }
+
+    function delete_board() {
+        $.ajax({
+            url: "/api/board/delete",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            data: {
+                id: final_id
+            },
+            cache: false,
+            success: (obj_data, status, xhr) => {
+                alert(JSON.stringify(obj_data));
+            },
+            error: (obj_data, status, xhr) => {
+                alert("error!!");
+                alert(JSON.stringify(obj_data));
+            }
+        });
+    }
+</script>
 
 
 </body>
