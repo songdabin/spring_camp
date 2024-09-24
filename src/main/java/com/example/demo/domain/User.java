@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Entity // DB 알아서 만들어주고, 내 DB랑 결합해서 사용할 거라는 의미
 public class User {
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id // Primary Key 지정
     Integer id;
 

@@ -87,6 +87,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object> login(Map<String, Object> params) {
+        /*
+        1. findByUsername
         User user = userRepository.findByUsername(params.get("username") + "");
         Map<String, Object> result = new HashMap<String, Object>();
 
@@ -100,6 +102,20 @@ public class UserServiceImpl implements UserService {
                     result.put("failed", user.getUsername());
                 }
             }
+        }
+
+        return result;
+        */
+
+        // 2. findByUsernameAndPassword
+        String username = (String) params.get("username");
+        String password = (String) params.get("password");
+
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        User user = userRepository.findByUsernameAndPassword(username, password);
+        if (user != null) {
+            result.put("resultCode", 200);
         }
 
         return result;
