@@ -84,4 +84,25 @@ public class UserServiceImpl implements UserService {
 
         return null;
     }
+
+    @Override
+    public Map<String, Object> login(Map<String, Object> params) {
+        User user = userRepository.findByUsername(params.get("username") + "");
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        if(user != null) {
+//            params에서 가져온 확인해야 할 정보 / userrepository에서 가져온 정보가 회원가입할 때 입력한 정보
+            if (user.getUsername().equals((String) params.get("username"))) {
+                if (user.getPassword().equals((String) params.get("password"))) {
+                    result.put("success", user.getUsername());
+                }
+                else {
+                    result.put("failed", user.getUsername());
+                }
+            }
+        }
+
+        return result;
+    }
+
 }

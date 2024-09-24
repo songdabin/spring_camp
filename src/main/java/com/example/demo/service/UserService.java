@@ -14,4 +14,6 @@ public interface UserService {
     User detail(Integer id);
     Map<String, Object> update(Map<String, Object> params);
     Map<String, Object> delete(Integer id);
+
+    Map<String, Object> login(Map<String, Object> params);
 }

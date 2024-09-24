@@ -45,4 +45,9 @@ public class UserRestController {
     public Map<String, Object> delete(@RequestParam Map<String, Object> params) {
         return userService.delete(Integer.parseInt(params.get(("id"))+""));
     }
+
+    @GetMapping("/login")
+    public Map<String, Object> login(@RequestParam Map<String, Object> params) {
+        return userService.login(params);
+    }
 }
