@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+</head>
+<body>
+  List
+  <div id="div_list"></div>
+  <button onclick="list_user()">유저 전체 목록</button>
+
+  <script>
+    function list_user() {
+      $.ajax({
+        url:"/api/user/list",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        data: {},
+        cache: false,
+        success: (obj_data, status, xhr)=>{
+          alert(JSON.stringify(obj_data));
+          for (let each of obj_data) {
+            $("#div_list").append(
+                    "<a href='/user/detail/"+each["id"]+"'>" + each["id"] + "</a>" + "//" + each["name"] + "<br />"
+            );
+          }
+        },
+        error: (obj_data, status, xhr)=>{
+          alert("ERROR!!!!");
+          alert(JSON.stringify(obj_data));
+        }
+      })
+    }
+  </script>
+</body>
+</html>

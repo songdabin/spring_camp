@@ -8,14 +8,14 @@
 <body>
     Create
     <div id="div_id" class="div-abcde">글 입력 테스트</div>
-    순서
-    <input type="number" id="create_board_id"/>
-    제목
-    <input type="text" id="create_board_title"/>
-    내용
-    <input type="text" id="create_board_content"/>
-    작성자
-    <input type="text" id="create_board_author"/>
+    아이디
+    <input type="number" id="create_user_username"/>
+    비밀번호
+    <input type="text" id="create_user_password"/>
+    이름
+    <input type="text" id="create_user_name"/>
+    전화번호
+    <input type="text" id="create_user_phone"/>
 
     <button onclick="create_user()">저장</button>
     <button onclick="change_html()">글 바꾸기</button>
@@ -28,14 +28,14 @@
 
         function create_user() {
             $.ajax({
-                url:"/api/board/create",
+                url:"/api/user/create",
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
                 data: {
-                    id: $("#create_board_id").val(),
-                    title: $("#create_board_title").val(),
-                    content: $("#create_board_content").val(),
-                    author: $("#create_board_author").val()
+                    username: $("#create_user_username").val(),
+                    password: $("#create_user_password").val(),
+                    name: $("#create_user_name").val(),
+                    phone: $("#create_user_phone").val()
                 },
                 cache: false,
                 success: (obj_data, status, xhr)=>{
