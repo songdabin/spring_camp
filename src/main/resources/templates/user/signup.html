@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+</head>
+<body>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <div style="display: flex; margin-bottom: 2vh; font-size: larger">Sign Up</div>
+        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 1vh">
+            <div id="temp_div">아이디 중복 확인을 먼저 진행하세요</div>
+            <div style="display:flex; gap: 10px;">
+                아이디
+                <input type="text" id="create_user_username"/>
+
+                <button onclick="dup_check_id()" id="btn_id_user">아이디 중복 확인</button>
+            </div>
+
+            <div style="display:flex; gap: 10px;">
+                비밀번호
+                <input type="password" id="create_user_password"/>
+            </div>
+
+            <div style="display:flex; gap: 10px;">
+                이름
+                <input type="text" id="create_user_name"/>
+            </div>
+
+            <div style="display:flex; gap: 10px;">
+                전화번호
+                <input type="text" id="create_user_phone"/>
+            </div>
+
+            <button onclick="signup_user()" id="btn_signup_user" disabled>회원가입</button>
+        </div>
+    </div>
+
+    <script>
+        function dup_check_id() {
+            $.ajax({
+                url:"/api/user/check",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                data: {
+                    username: $("#create_user_username").val()
+                },
+                cache: false,
+                success: (obj_data, status, xhr)=>{
+                    alert(JSON.stringify(obj_data));
+                    if (obj_data) {
+                        $("#temp_div").text("중복되지 않은 아이디입니다.");
+                        $("#btn_signup_user").attr("disabled", false);
+                        $("#create_user_username").attr("readOnly", true);
+                        $("#btn_id_user").remove();
+                    }
+                },
+                error: (obj_data, status, xhr)=>{
+                    alert("ERROR!!!!");
+                    alert(JSON.stringify(obj_data));
+                }
+            })
+        }
+        function signup_user() {
+            $.ajax({
+                url:"/api/user/signup",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                data: {
+                    username: $("#create_user_username").val(),
+                    password: $("#create_user_password").val(),
+                    name: $("#create_user_name").val(),
+                    phone: $("#create_user_phone").val()
+                },
+                cache: false,
+                success: (obj_data, status, xhr)=>{
+                    alert(JSON.stringify(obj_data));
+                },
+                error: (obj_data, status, xhr)=>{
+                    alert("ERROR!!!!");
+                    alert(JSON.stringify(obj_data));
+                }
+            })
+        }
+    </script>
+</body>
+</html>

@@ -16,6 +16,23 @@ import java.util.Map;
 @RequestMapping("/api/user")
 @RestController
 public class UserRestController {
+    @GetMapping("/login")
+    public Map<String, Object> login(@RequestParam Map<String, Object> params) {
+        return userService.login(params);
+    }
+
+    @GetMapping("/signup")
+    public Map<String, Object> signup(@RequestParam Map<String, Object> params) {
+        return userService.signup(params);
+    }
+
+    @GetMapping("/check")
+    public boolean check(@RequestParam String username) {
+        return userService.check(username);
+    }
+
+    /**/
+
     private final UserService userService;
     public UserRestController(UserService userService) {
         this.userService = userService;
@@ -43,11 +60,6 @@ public class UserRestController {
 
     @GetMapping("/delete")
     public Map<String, Object> delete(@RequestParam Map<String, Object> params) {
-        return userService.delete(Integer.parseInt(params.get(("id"))+""));
-    }
-
-    @GetMapping("/login")
-    public Map<String, Object> login(@RequestParam Map<String, Object> params) {
-        return userService.login(params);
+        return userService.delete(Integer.parseInt(params.get(("id")) + ""));
     }
 }

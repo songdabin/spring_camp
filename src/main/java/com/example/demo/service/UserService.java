@@ -9,11 +9,13 @@ import java.util.Map;
 
 @Service
 public interface UserService {
+    Map<String, Object> login(Map<String, Object> params);
+    Map<String, Object> signup(Map<String, Object> params);
+    boolean check(String username);
+
     Map<String, Object> create(Map<String, Object> params);
     List<User> list();
     User detail(Integer id);
     Map<String, Object> update(Map<String, Object> params);
     Map<String, Object> delete(Integer id);
-
-    Map<String, Object> login(Map<String, Object> params);
 }

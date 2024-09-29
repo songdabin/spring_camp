@@ -121,4 +121,52 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    /*
+    @Override
+    public Map<String, Object> signup(Map<String, Object> params) {
+        System.out.println("signup");
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        String username = (String) params.get("username");
+        User user = userRepository.findByUsername(username);
+
+        if (user == null){
+            user = new User();
+            user.setUsername((String) params.get("username"));
+            user.setPassword((String) params.get("password"));
+            user.setName((String) params.get("name"));
+            user.setPhone((String) params.get("phone"));
+            user = userRepository.save(user);
+
+            result.put("id", user.getId());
+        } else {
+            result.put("id duplicated", user.getUsername());
+        }
+        return result;
+    }
+     */
+
+    @Override
+    public Map<String, Object> signup(Map<String, Object> params) {
+        String username = (String) params.get("username");
+        String password = (String) params.get("password");
+        if (username == null || "".equals(username) || password == null || "".equals(password)) {
+            return null;
+        }
+
+        return create(params);
+    }
+
+    @Override
+    public boolean check(String username) {
+        User user = userRepository.findByUsername(username);
+
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        if (user != null){
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
