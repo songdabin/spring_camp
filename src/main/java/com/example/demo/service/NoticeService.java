@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.domain.Notice;
+import com.example.demo.dto.NoticeDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,9 +9,9 @@ import java.util.Map;
 
 @Service
 public interface NoticeService {
-    Map<String, Object> create(Map<String, Object> params);
+    NoticeDto.CreateResDto create(NoticeDto.CreateReqDto param);
     List<Notice> list();
     Notice detail(Long id);
-    Map<String, Object> update(Map<String, Object> params);
+    void update(NoticeDto.UpdateReqDto param);
     Map<String, Object> delete(Long id);
 }

@@ -1,12 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.Notice;
+import com.example.demo.dto.NoticeDto;
 import com.example.demo.service.NoticeService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,10 +17,20 @@ public class NoticeRestController {
         this.noticeService = noticeService;
     }
 
+    @PostMapping("/create")
+    public NoticeDto.CreateResDto create(@RequestBody NoticeDto.CreateReqDto param) {
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("title", param.getTitle());
+//        params.put("content", param.getContent());
+        return noticeService.create(param);
+    }
+
+    /*
     @GetMapping("/create")
     public Map<String, Object> create(@RequestParam Map<String, Object> params) {
         return noticeService.create(params);
     }
+     */
 
     @GetMapping("/list")
     public List<Notice> list() {
@@ -33,9 +42,14 @@ public class NoticeRestController {
         return noticeService.detail(id);
     }
 
-    @GetMapping("/update")
-    public Map<String, Object> update(@RequestParam Map<String, Object> params) {
-        return noticeService.update(params);
+//    @GetMapping("/update")
+//    public void update(@RequestParam Map<String, Object> params) {
+//        noticeService.update(params);
+//    }
+
+    @PutMapping("/update")
+    public void update(@RequestBody NoticeDto.UpdateReqDto param) {
+        noticeService.update(param);
     }
 
     @GetMapping("/delete")
