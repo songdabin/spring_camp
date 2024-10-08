@@ -6,6 +6,8 @@ import com.example.demo.repository.NoticeRepository;
 import com.example.demo.service.NoticeService;
 import org.springframework.stereotype.Service;
 
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,23 +21,11 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public NoticeDto.CreateResDto create(NoticeDto.CreateReqDto param) {
-//        Map<String, Object> result = new HashMap<String, Object>();
-
-//        Notice notice = new Notice();
-//
-//        notice.setTitle(param.getTitle());
-//        notice.setContent(param.getContent());
-//        noticeRepository.save(notice);
-
-//        result.put("success", true);
-//        result.put("id", notice.getId());
-//
-//        return result;
-
-        Notice notice = param.toEntity();
+        /*Notice notice = param.toEntity();
         notice = noticeRepository.save(notice);
         NoticeDto.CreateResDto result = notice.toCreateResDto();
-        return result;
+        return result;*/
+        return noticeRepository.save(param.toEntity()).toCreateResDto();
     }
 
     @Override
@@ -53,33 +43,35 @@ public class NoticeServiceImpl implements NoticeService {
         noticeRepository.save(notice);
     }
 
+    public NoticeDto.DetailResDto entityToDto(Notice notice) {
+        NoticeDto.DetailResDto result = new NoticeDto.DetailResDto();
 
-    @Override
-    public List<Notice> list() {
-        return noticeRepository.findAll();
+        result.setId(notice.getId());
+        result.setTitle(notice.getTitle());
+        result.setContent(notice.getContent());
+
+        return result;
     }
 
     @Override
-    public Notice detail(Long id) {
-        return noticeRepository.findById(id).orElseThrow(()-> new RuntimeException(""));
+    public List<NoticeDto.DetailResDto> list() {
+        List<NoticeDto.DetailResDto> list = new ArrayList<>();
+        List<Notice> noticeList = noticeRepository.findAll();
+
+        for (Notice notice:
+             noticeList) {
+            list.add(entityToDto(notice));
+        }
+
+        return list;
     }
 
-//    @Override
-//    public Map<String, Object> update(Map<String, Object> params) {
-//        Notice notice = noticeRepository.findById(Long.parseLong(params.get("id") + "")).orElseThrow(() -> new RuntimeException(""));
-//
-//        if(params.get("title")!=null) {
-//            notice.setTitle((String) params.get("title"));
-//        }
-//
-//        if(params.get("content")!=null) {
-//            notice.setContent((String) params.get("content"));
-//        }
-//
-//        noticeRepository.save(notice);
-//
-//        return null;
-//    }
+    @Override
+    public NoticeDto.DetailResDto detail(Long id) {
+        Notice notice = noticeRepository.findById(id).orElseThrow(()-> new RuntimeException(""));
+
+        return entityToDto(notice);
+    }
 
     @Override
     public Map<String, Object> delete(Long id) {

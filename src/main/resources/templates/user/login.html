@@ -18,12 +18,12 @@
         function login_user() {
             $.ajax({
                 url:"/api/user/login",
-                type: "GET",
+                type: "POST",
                 contentType: 'application/json; charset=utf-8',
-                data: {
+                data: JSON.stringify({
                     username: $("#login_username").val(),
                     password: $("#login_password").val()
-                },
+                }),
                 cache: false,
                 success: (obj_data, status, xhr)=>{
                     alert(JSON.stringify(obj_data));

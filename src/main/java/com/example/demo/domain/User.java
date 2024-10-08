@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.example.demo.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import lombok.Setter;
 public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id // Primary Key 지정
-    Integer id;
+    Long id;
 
     @Setter @Column(unique = true, nullable = false)
     String username;
@@ -21,4 +22,11 @@ public class User {
     String password;
     @Setter String name;
     @Setter String phone;
+
+    public UserDto.CreateResDto toCreateResDto() {
+        UserDto.CreateResDto result = new UserDto.CreateResDto();
+        result.setId(getId());
+
+        return result;
+    }
 }

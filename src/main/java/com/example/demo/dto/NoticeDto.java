@@ -33,7 +33,14 @@ public class NoticeDto {
     @Setter
     @Getter
     public static class CreateResDto {
-        @Id
         private long id;
+    }
+
+    @Getter
+    @Setter
+    public static class DetailResDto {
+        private long id;
+        private String title;
+        private String content;
     }
 }

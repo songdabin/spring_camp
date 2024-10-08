@@ -10,8 +10,8 @@ import java.util.Map;
 @Service
 public interface NoticeService {
     NoticeDto.CreateResDto create(NoticeDto.CreateReqDto param);
-    List<Notice> list();
-    Notice detail(Long id);
+    List<NoticeDto.DetailResDto> list();
+    NoticeDto.DetailResDto detail(Long id);
     void update(NoticeDto.UpdateReqDto param);
     Map<String, Object> delete(Long id);
 }

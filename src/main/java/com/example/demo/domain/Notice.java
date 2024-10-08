@@ -17,9 +17,6 @@ public class Notice {
     @Setter
     String content;
 
-    @Setter
-    Long read_cnt;
-
     public NoticeDto.CreateResDto toCreateResDto() {
         NoticeDto.CreateResDto dto = new NoticeDto.CreateResDto();
         dto.setId(getId());

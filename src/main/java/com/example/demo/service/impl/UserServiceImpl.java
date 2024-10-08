@@ -1,11 +1,11 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.domain.User;
+import com.example.demo.dto.UserDto;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,26 +17,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> create(Map<String, Object> params) {
+    public UserDto.CreateResDto create(UserDto.CreateReqDto param) {
         System.out.println("create");
 
-        Map<String, Object> result = new HashMap<String, Object>();
-        String username = (String) params.get("username");
-        User user = userRepository.findByUsername(username);
-
-        if(user == null){
-            user = new User();
-            user.setUsername((String) params.get("username"));
-            user.setPassword((String) params.get("password"));
-            user.setName((String) params.get("name"));
-            user.setPhone((String) params.get("phone"));
-            user = userRepository.save(user);
-
-            result.put("id", user.getId());
-        } else {
-            result.put("id duplicated", user.getUsername());
+        User user = userRepository.findByUsername(param.getUsername());
+        if (user != null) {
+            throw new RuntimeException("id exist");
         }
-        return result;
+
+        return userRepository.save(param.toEntity()).toCreateResDto();
     }
 
     @Override
@@ -45,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User detail(Integer id) {
+    public User detail(Long id) {
         return userRepository.findById(id).orElseThrow(()-> new RuntimeException(""));
     }
 
@@ -53,7 +42,7 @@ public class UserServiceImpl implements UserService {
     public Map<String, Object> update(Map<String, Object> params) {
         System.out.println("update");
 
-        User user = userRepository.findById(Integer.parseInt(params.get("id") + "")).orElseThrow(() -> new RuntimeException(""));
+        User user = userRepository.findById(Long.parseLong(params.get("id") + "")).orElseThrow(() -> new RuntimeException(""));
 
         if(params.get("username")!=null) {
             user.setUsername((String) params.get("username"));
@@ -77,7 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> delete(Integer id) {
+    public Map<String, Object> delete(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException(""));
 
         userRepository.delete(user);
@@ -86,82 +75,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> login(Map<String, Object> params) {
-        /*
-        1. findByUsername
-        User user = userRepository.findByUsername(params.get("username") + "");
-        Map<String, Object> result = new HashMap<String, Object>();
-
-        if(user != null) {
-//            params에서 가져온 확인해야 할 정보 / userrepository에서 가져온 정보가 회원가입할 때 입력한 정보
-            if (user.getUsername().equals((String) params.get("username"))) {
-                if (user.getPassword().equals((String) params.get("password"))) {
-                    result.put("success", user.getUsername());
-                }
-                else {
-                    result.put("failed", user.getUsername());
-                }
-            }
-        }
-
-        return result;
-        */
-
-        // 2. findByUsernameAndPassword
-        String username = (String) params.get("username");
-        String password = (String) params.get("password");
-
-        Map<String, Object> result = new HashMap<String, Object>();
-
+    public UserDto.LoginResDto login(UserDto.LoginReqDto param) {
+        String username = param.getUsername();
+        String password = param.getPassword();
         User user = userRepository.findByUsernameAndPassword(username, password);
-        if (user != null) {
-            result.put("resultCode", 200);
+        if(user == null){
+            throw new RuntimeException("id password not matched");
         }
-
-        return result;
+        UserDto.LoginResDto res = new UserDto.LoginResDto();
+        res.setResult(true);
+        return res;
     }
 
-    /*
     @Override
-    public Map<String, Object> signup(Map<String, Object> params) {
-        System.out.println("signup");
-
-        Map<String, Object> result = new HashMap<String, Object>();
-        String username = (String) params.get("username");
-        User user = userRepository.findByUsername(username);
-
-        if (user == null){
-            user = new User();
-            user.setUsername((String) params.get("username"));
-            user.setPassword((String) params.get("password"));
-            user.setName((String) params.get("name"));
-            user.setPhone((String) params.get("phone"));
-            user = userRepository.save(user);
-
-            result.put("id", user.getId());
-        } else {
-            result.put("id duplicated", user.getUsername());
+    public UserDto.CreateResDto signup(UserDto.CreateReqDto param) {
+        if(param.getUsername() == null || param.getPassword() == null || param.getName() == null || param.getPhone() == null){
+            throw new RuntimeException("not enough parameters");
         }
-        return result;
-    }
-     */
-
-    @Override
-    public Map<String, Object> signup(Map<String, Object> params) {
-        String username = (String) params.get("username");
-        String password = (String) params.get("password");
-        if (username == null || "".equals(username) || password == null || "".equals(password)) {
-            return null;
-        }
-
-        return create(params);
+        return create(param);
     }
 
     @Override
     public boolean check(String username) {
         User user = userRepository.findByUsername(username);
-
-        Map<String, Object> result = new HashMap<String, Object>();
 
         if (user != null){
             return false;

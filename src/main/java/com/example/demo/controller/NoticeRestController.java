@@ -17,43 +17,28 @@ public class NoticeRestController {
         this.noticeService = noticeService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("")
     public NoticeDto.CreateResDto create(@RequestBody NoticeDto.CreateReqDto param) {
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("title", param.getTitle());
-//        params.put("content", param.getContent());
         return noticeService.create(param);
     }
 
-    /*
-    @GetMapping("/create")
-    public Map<String, Object> create(@RequestParam Map<String, Object> params) {
-        return noticeService.create(params);
-    }
-     */
-
     @GetMapping("/list")
-    public List<Notice> list() {
+    public List<NoticeDto.DetailResDto> list() {
         return noticeService.list();
     }
 
     @GetMapping("/detail")
-    public Notice detail(@RequestParam Long id) {
+    public NoticeDto.DetailResDto detail(@RequestParam Long id) {
         return noticeService.detail(id);
     }
 
-//    @GetMapping("/update")
-//    public void update(@RequestParam Map<String, Object> params) {
-//        noticeService.update(params);
-//    }
-
-    @PutMapping("/update")
+    @PutMapping("")
     public void update(@RequestBody NoticeDto.UpdateReqDto param) {
         noticeService.update(param);
     }
 
-    @GetMapping("/delete")
-    public Map<String, Object> delete(@RequestParam Map<String, Object> params) {
-        return noticeService.delete(Long.parseLong(params.get(("id")) + ""));
+    @DeleteMapping("")
+    public void delete(@RequestBody NoticeDto.UpdateReqDto param) {
+        noticeService.delete(param.getId());
     }
 }
