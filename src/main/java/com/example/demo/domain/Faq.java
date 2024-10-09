@@ -1,7 +1,6 @@
 package com.example.demo.domain;
 
 import com.example.demo.dto.FaqDto;
-import com.example.demo.dto.NoticeDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
