@@ -53,7 +53,6 @@ public class FaqServiceImpl implements FaqService {
             User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException(""));
             result.setUserUsername(user.getUsername());
         } catch(Exception e) {
-
         }
 
         return result;

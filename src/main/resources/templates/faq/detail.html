@@ -18,6 +18,8 @@
         <input type="text" id="detail_faq_title"/>
         Content
         <input type="text" id="detail_faq_content"/>
+        Username
+        <input type="text" id="detail_faq_username" disabled/>
 
         <button onclick="update_faq()">
             edit
@@ -77,6 +79,7 @@
                 $("#detail_faq_id").val(obj_data.id);
                 $("#detail_faq_title").val(obj_data["title"]);
                 $("#detail_faq_content").val(obj_data["content"]);
+                $("#detail_faq_username").val(obj_data["userUsername"]);
             },
             error: (obj_data, status, xhr) => {
                 alert("error!!");

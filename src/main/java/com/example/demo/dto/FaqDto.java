@@ -45,6 +45,6 @@ public class FaqDto {
         private Long userId;
         private String title;
         private String content;
-        private String UserUsername;
+        private String userUsername;
     }
 }
