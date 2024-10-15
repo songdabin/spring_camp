@@ -1,8 +1,10 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.domain.Faq;
+import com.example.demo.domain.User;
 import com.example.demo.dto.FaqDto;
 import com.example.demo.repository.FaqRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.FaqService;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +14,10 @@ import java.util.List;
 @Service
 public class FaqServiceImpl implements FaqService {
     private final FaqRepository faqRepository;
-    public FaqServiceImpl(FaqRepository faqRepository) {
+    private final UserRepository userRepository;
+    public FaqServiceImpl(FaqRepository faqRepository, UserRepository userRepository) {
         this.faqRepository = faqRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -42,6 +46,15 @@ public class FaqServiceImpl implements FaqService {
         result.setId(faq.getId());
         result.setTitle(faq.getTitle());
         result.setContent(faq.getContent());
+        result.setUserId(faq.getUserId());
+
+        Long userId = faq.getUserId();
+        try {
+            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException(""));
+            result.setUserUsername(user.getUsername());
+        } catch(Exception e) {
+
+        }
 
         return result;
     }

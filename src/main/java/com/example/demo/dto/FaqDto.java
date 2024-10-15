@@ -11,6 +11,7 @@ public class FaqDto {
     public static class CreateReqDto {
         private String title;
         private String content;
+        private Long userId;
 
         public Faq toEntity() {
             /*Faq faq = new Faq();
@@ -18,7 +19,7 @@ public class FaqDto {
             faq.setContent(getContent());
             return faq;*/
 
-            return Faq.of(getTitle(), getContent());
+            return Faq.of(getUserId(), getTitle(), getContent());
         }
     }
 
@@ -34,14 +35,16 @@ public class FaqDto {
     @Setter
     @Getter
     public static class CreateResDto {
-        private long id;
+        private Long id;
     }
 
     @Getter
     @Setter
     public static class DetailResDto {
-        private long id;
+        private Long id;
+        private Long userId;
         private String title;
         private String content;
+        private String UserUsername;
     }
 }

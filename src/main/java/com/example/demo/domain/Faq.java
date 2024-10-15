@@ -11,6 +11,9 @@ public class Faq {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id long id;
 
+    @Setter
+    Long userId;
+
     @Setter @Column(nullable = false)
     String title;
 
@@ -20,13 +23,14 @@ public class Faq {
     // 생성자는 아무도 사용하지 못하게 하려고
     // of method를 통해서만 entity instance를 생성
     protected Faq() {}
-    private Faq(String title, String content) {
+    private Faq(Long userId, String title, String content) {
+        this.userId = userId;
         this.title = title;
         this.content = content;
     }
 
-    public static Faq of(String title, String content) {
-        return new Faq(title, content);
+    public static Faq of(Long userId, String title, String content) {
+        return new Faq(userId, title, content);
     }
 
     public FaqDto.CreateResDto toCreateResDto() {
