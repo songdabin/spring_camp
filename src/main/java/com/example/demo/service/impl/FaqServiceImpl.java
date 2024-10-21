@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.domain.Faq;
 import com.example.demo.domain.User;
 import com.example.demo.dto.FaqDto;
+import com.example.demo.mapper.FaqMapper;
 import com.example.demo.repository.FaqRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.FaqService;
@@ -14,9 +15,11 @@ import java.util.List;
 @Service
 public class FaqServiceImpl implements FaqService {
     private final FaqRepository faqRepository;
+    private final FaqMapper faqMapper;
     private final UserRepository userRepository;
-    public FaqServiceImpl(FaqRepository faqRepository, UserRepository userRepository) {
+    public FaqServiceImpl(FaqRepository faqRepository, FaqMapper faqMapper, UserRepository userRepository) {
         this.faqRepository = faqRepository;
+        this.faqMapper = faqMapper;
         this.userRepository = userRepository;
     }
 
@@ -73,9 +76,11 @@ public class FaqServiceImpl implements FaqService {
 
     @Override
     public FaqDto.DetailResDto detail(Long id) {
-        Faq faq = faqRepository.findById(id).orElseThrow(()-> new RuntimeException(""));
-
-        return entityToDto(faq);
+        return faqMapper.detail(id);
+//        without mapper
+//        Faq faq = faqRepository.findById(id).orElseThrow(()-> new RuntimeException(""));
+//
+//        return entityToDto(faq);
     }
 
     @Override
