@@ -7,19 +7,26 @@
 </head>
 <body>
   Faq List
+  검색어: <input id="search_faq_title" />
   <div id="div_list_faq"></div>
-<!--  <button onclick="list_faq()">FAQ 전체 목록</button>-->
+
+  <button onclick="list_faq()">
+      자주묻는질문 전체 목록
+  </button>
 
   <script>
       $( document ).ready(function() {
           list_faq();
       });
+
     function list_faq() {
       $.ajax({
         url:"/api/faq/list",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
-        data: {},
+        data: {
+            title: $("#search_faq_title").val()
+        },
         cache: false,
         success: (obj_data, status, xhr)=>{
             $("#div_list_faq").html("");

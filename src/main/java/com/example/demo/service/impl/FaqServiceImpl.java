@@ -9,7 +9,6 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.FaqService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,6 +16,7 @@ public class FaqServiceImpl implements FaqService {
     private final FaqRepository faqRepository;
     private final FaqMapper faqMapper;
     private final UserRepository userRepository;
+
     public FaqServiceImpl(FaqRepository faqRepository, FaqMapper faqMapper, UserRepository userRepository) {
         this.faqRepository = faqRepository;
         this.faqMapper = faqMapper;
@@ -62,8 +62,9 @@ public class FaqServiceImpl implements FaqService {
     }
 
     @Override
-    public List<FaqDto.DetailResDto> list() {
-        List<FaqDto.DetailResDto> list = new ArrayList<>();
+    public List<FaqDto.DetailResDto> list(FaqDto.ListReqDto param) {
+        return faqMapper.list(param);
+        /*List<FaqDto.DetailResDto> list = new ArrayList<>();
         List<Faq> faqList = faqRepository.findAll();
 
         for (Faq faq:
@@ -71,16 +72,18 @@ public class FaqServiceImpl implements FaqService {
             list.add(entityToDto(faq));
         }
 
-        return list;
+        return list;*/
     }
 
     @Override
     public FaqDto.DetailResDto detail(Long id) {
         return faqMapper.detail(id);
-//        without mapper
-//        Faq faq = faqRepository.findById(id).orElseThrow(()-> new RuntimeException(""));
-//
-//        return entityToDto(faq);
+        /*
+        // without mapper
+        Faq faq = faqRepository.findById(id).orElseThrow(()-> new RuntimeException(""));
+
+        return entityToDto(faq);
+        */
     }
 
     @Override
