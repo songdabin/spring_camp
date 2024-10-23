@@ -9,6 +9,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.FaqService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -63,16 +64,17 @@ public class FaqServiceImpl implements FaqService {
 
     @Override
     public List<FaqDto.DetailResDto> list(FaqDto.ListReqDto param) {
-        return faqMapper.list(param);
-        /*List<FaqDto.DetailResDto> list = new ArrayList<>();
-        List<Faq> faqList = faqRepository.findAll();
-
-        for (Faq faq:
-             faqList) {
-            list.add(entityToDto(faq));
+        // newList를 수정하고 리턴
+        List<FaqDto.DetailResDto> list = faqMapper.list(param);
+        List<FaqDto.DetailResDto> newList = new ArrayList<>();
+        for (FaqDto.DetailResDto each:
+             list) {
+            newList.add(detail(each.getId()));
         }
 
-        return list;*/
+        return newList;
+
+        // return faqMapper.list(param);
     }
 
     @Override

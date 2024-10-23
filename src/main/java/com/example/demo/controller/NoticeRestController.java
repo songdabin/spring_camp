@@ -23,8 +23,8 @@ public class NoticeRestController {
     }
 
     @GetMapping("/list")
-    public List<NoticeDto.DetailResDto> list() {
-        return noticeService.list();
+    public List<NoticeDto.DetailResDto> list(NoticeDto.ListReqDto param) {
+        return noticeService.list(param);
     }
 
     @GetMapping("/detail")
