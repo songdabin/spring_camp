@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.Notice;
+import com.example.demo.dto.DefaultDto;
 import com.example.demo.dto.NoticeDto;
 import com.example.demo.service.NoticeService;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class NoticeRestController {
     }
 
     @PostMapping("")
-    public NoticeDto.CreateResDto create(@RequestBody NoticeDto.CreateReqDto param) {
+    public DefaultDto.CreateResDto create(@RequestBody NoticeDto.CreateReqDto param) {
         return noticeService.create(param);
     }
 
@@ -40,5 +41,10 @@ public class NoticeRestController {
     @DeleteMapping("")
     public void delete(@RequestBody NoticeDto.UpdateReqDto param) {
         noticeService.delete(param.getId());
+    }
+
+    @GetMapping("/pagedList")
+    public NoticeDto.PagedListResDto pagedList(NoticeDto.PagedListReqDto param) {
+        return noticeService.pagedList(param);
     }
 }
