@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class DefaultDto {
 
@@ -57,4 +58,62 @@ public class DefaultDto {
         private Boolean deleted;
     }
 
+    @AllArgsConstructor @NoArgsConstructor @SuperBuilder @Setter @Getter
+    public static class PagedListReqDto {
+        private int callpage; // 요청 페이지
+        private String orderby; //정렬 기준
+        private String orderway; //정렬 방향
+        private Integer perpage; //한페이지에 몇개 보여줄지
+        private Integer offset; //몇번째 정보부터 보여줄지
+    }
+    @AllArgsConstructor @NoArgsConstructor @SuperBuilder @Setter @Getter
+    public static class PagedListResDto {
+        private int itemcount;
+        private int pagecount;
+        private int callpage;
+        private Object list;
+
+        public static PagedListResDto init(PagedListReqDto param, int itemcount) {
+            Integer perpage = param.getPerpage();
+            if (perpage == null) {
+                perpage = 10;
+            }
+
+            int pagecount = itemcount / perpage;
+            if (itemcount % perpage > 0) {
+                pagecount++;
+            }
+            int callpage = param.getCallpage();
+
+            if (callpage < 1) {
+                callpage = 1;
+            }
+            if (callpage > pagecount) {
+                callpage = pagecount;
+            }
+
+            int offset = (callpage - 1) * perpage;
+            param.setOffset(offset);
+
+            // 정렬 기준
+            String orderby = param.getOrderby();
+            if (orderby == null || "".equals(orderby)) {
+                orderby = "created_at";
+            }
+            param.setOrderby(orderby);
+
+            // 정렬 방향
+            String orderway = param.getOrderway();
+            if (orderway == null || "".equals(orderway)) {
+                orderway = "desc";
+            }
+            param.setOrderway(orderway);
+
+            return DefaultDto.PagedListResDto.builder()
+                    .itemcount(itemcount)
+                    .pagecount(pagecount)
+                    .callpage(callpage)
+                    .build();
+        }
+    }
 }

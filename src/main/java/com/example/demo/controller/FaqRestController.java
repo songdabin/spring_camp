@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.DefaultDto;
 import com.example.demo.dto.FaqDto;
 import com.example.demo.service.FaqService;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +17,19 @@ public class FaqRestController {
     }
 
     @PostMapping("")
-    public ResponseEntity<FaqDto.CreateResDto> create(@RequestBody FaqDto.CreateReqDto param) {
+    public ResponseEntity<DefaultDto.CreateResDto> create(@RequestBody FaqDto.CreateReqDto param) {
         return ResponseEntity.ok(faqService.create(param));
 //        return ResponseEntity.status(HttpStatus.CREATED).body(faqService.create(param));
     }
 
-    /*@PostMapping("")
-    public FaqDto.CreateResDto create(@RequestBody FaqDto.CreateReqDto param) {
-        return faqService.create(param);
-    }*/
-
     @GetMapping("/list")
     public ResponseEntity<List<FaqDto.DetailResDto>> list(FaqDto.ListReqDto param) {
         return ResponseEntity.ok(faqService.list(param));
+    }
+
+    @GetMapping("/plist")
+    public ResponseEntity<DefaultDto.PagedListResDto> plist(FaqDto.PagedListReqDto param) {
+        return ResponseEntity.ok(faqService.pagedList(param));
     }
 
     @GetMapping("/detail")

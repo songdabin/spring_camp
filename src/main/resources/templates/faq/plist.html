@@ -9,13 +9,24 @@
     Paged List
     요청페이지 : <input type="number" id="search_callpage" value="1" onchange="pList()"/>
     한번에 볼 페이지 수: <input type="number" id="search_perpage" value="3" onchange="pList()"/>
+    정렬기준 :
+    <select id="search_orderby">
+        <option value="created_at">시간순</option>
+        <option value="title">제목순</option>
+    </select>
+
+    정렬방향 :
+    <select id="search_orderway">
+        <option value="desc">반대 순서</option>
+        <option value="asc">원래 순서</option>
+    </select>
     <br/>
     <br/>
     전체 게시글 수 : <input type="number" id="info_total_itemcount" readonly="readonly"/>
     전체 페이지 수 : <input type="number" id="info_total_pagecount" readonly="readonly"/>
     <br/>
     <br/>
-    검색어 : <input id="search_notice_title" onchange="pList()"/>
+    검색어 : <input id="search_faq_title" onchange="pList()"/>
     <div id="div_list">
     </div>
     <br/>
@@ -37,13 +48,15 @@
 
         function pList() {
             $.ajax({
-                url: "/api/notice/pagedList",
+                url: "/api/faq/plist",
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
                 data: {
-                    title : $("#search_notice_title").val()
+                    title : $("#search_faq_title").val()
                     , perpage : $("#search_perpage").val()
                     , callpage : $("#search_callpage").val()
+                    , orderby : $("#search_orderby").val()
+                    , orderway : $("#search_orderway").val()
                 },
                 cache: false,
                 success: (obj_data, status, xhr) => {
@@ -53,11 +66,11 @@
                     //alert(JSON.stringify(obj_data));
                     for(let each of tempList){
                         $("#div_list").append(
-                            "<a href='/notice/detail/"+each["id"]+"'>"+each["id"]+"</a>" + "//" + each["title"] + "<br/>"
+                            "<a href='/faq/detail/"+each["id"]+"'>"+each["id"]+"</a>" + "//" + each["title"] + "<br/>"
                         );
                     }
-                    $("#info_total_itemcount").val(obj_data["countList"]);
-                    $("#info_total_pagecount").val(obj_data["countPage"]);
+                    $("#info_total_itemcount").val(obj_data["itemcount"]);
+                    $("#info_total_pagecount").val(obj_data["pagecount"]);
                     $("#search_callpage").val(obj_data["callpage"]);
 
                     let callpage = obj_data["callpage"];
@@ -84,7 +97,7 @@
                     // 현재 페이지 보다 뒤로 이동
                     for(let i = 0; i < 3; i++){
                         let tempPage = callpage + 1 + i;
-                        if(tempPage <= obj_data["countPage"]){
+                        if(tempPage <= obj_data["pagecount"]){
                             $("#div_page_number").append(
                                 "<a href='javascript:listener_callpage("+tempPage+")'>"+tempPage+"</a> &nbsp; &nbsp;"
                             );
@@ -92,7 +105,7 @@
                     }
 
                     $("#div_page_number").append(
-                        "<a href='javascript:listener_callpage("+obj_data["countPage"]+")'>&gt;&gt;</a> &nbsp; &nbsp;"
+                        "<a href='javascript:listener_callpage("+obj_data["pagecount"]+")'>&gt;&gt;</a> &nbsp; &nbsp;"
                     );
 
                     /*
