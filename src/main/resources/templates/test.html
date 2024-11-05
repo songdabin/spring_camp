@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Upload</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+</head>
+<body>
+    <H3>
+        File Upload
+    </H3>
+
+    <input type="file" id="input_file" onchange="readURLFile(this)"/>
+    <button onclick="imgfile_upload()">
+        이미지 파일 업로드
+    </button>
+
+    <input type="text" id="input_textfilename"/>
+    <button onclick="file_upload()">
+        일반 파일 업로드
+    </button>
+
+    <a href="javascript:filedownloadTest()">다운로드</a>
+
+
+    <img id="img_test" alt="test" src=""/>
+
+    <script>
+        let tempFile = null;
+
+        function readURLFile(input) {
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+                reader.readAsDataURL(input.files[0]);
+                reader.onload = function (e) {
+                    tempFile = input.files[0];
+                }
+            }
+        }
+
+        function imgfile_upload() {
+            let fileData = new FormData();
+            fileData.append("file", tempFile);
+
+            $.ajax({
+                url: "/api/upload",
+                type: "POST",
+                data: fileData,
+                cache : false,
+                contentType : false,
+                processData : false,
+                success: (data, status, xhr) => {
+                    alert(JSON.stringify(data));
+                    $("#img_test").attr("src", "/image/" + data);
+                },
+                error: (data) => {
+                    alert("error");
+                },
+            });
+        }
+
+        function file_upload() {
+            let fileData = new FormData();
+            fileData.append("file", tempFile);
+
+            $.ajax({
+                url: "/api/upload",
+                type: "POST",
+                data: fileData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: (data, status, xhr) => {
+                    alert(JSON.stringify(data));
+                    $("#input_textfilename").val(data);
+                },
+                error: (data) => {
+                    alert("error");
+                },
+            });
+        }
+
+        function filedownloadTest() {
+            location.href = "/download/" + $("#input_textfilename").val();
+        }
+    </script>
+</body>
+</html>
