@@ -4,10 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
 public class DefaultDto {
-
     @AllArgsConstructor
     @NoArgsConstructor
     @SuperBuilder
@@ -63,8 +60,11 @@ public class DefaultDto {
         private int callpage; // 요청 페이지
         private String orderby; //정렬 기준
         private String orderway; //정렬 방향
+
         private Integer perpage; //한페이지에 몇개 보여줄지
         private Integer offset; //몇번째 정보부터 보여줄지
+
+        private Boolean deleted;
     }
     @AllArgsConstructor @NoArgsConstructor @SuperBuilder @Setter @Getter
     public static class PagedListResDto {
@@ -76,7 +76,11 @@ public class DefaultDto {
         public static PagedListResDto init(PagedListReqDto param, int itemcount) {
             Integer perpage = param.getPerpage();
             if (perpage == null) {
-                perpage = 10;
+                param.setPerpage(10);
+            } else {
+                if (perpage < 0) {
+                    param.setPerpage(0);
+                }
             }
 
             int pagecount = itemcount / perpage;
@@ -97,14 +101,14 @@ public class DefaultDto {
 
             // 정렬 기준
             String orderby = param.getOrderby();
-            if (orderby == null || "".equals(orderby)) {
+            if (orderby == null || orderby.isEmpty()) {
                 orderby = "created_at";
             }
             param.setOrderby(orderby);
 
             // 정렬 방향
             String orderway = param.getOrderway();
-            if (orderway == null || "".equals(orderway)) {
+            if (orderway == null || orderway.isEmpty()) {
                 orderway = "desc";
             }
             param.setOrderway(orderway);
@@ -114,6 +118,38 @@ public class DefaultDto {
                     .pagecount(pagecount)
                     .callpage(callpage)
                     .build();
+        }
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @SuperBuilder
+    @Setter
+    @Getter
+    public static class ScrollListReqDto {
+        private String orderway; //정렬 방향
+        private Integer perpage; //한페이지에 몇개 보여줄지
+        private Long cursor; //기준이 되는 정보를 가진 id값
+        private String createdAt;
+
+        private Boolean deleted;
+
+        public void init() {
+            Integer perpage = getPerpage();
+            if (perpage == null) {
+                setPerpage(10);
+            } else {
+                if (perpage < 0) {
+                    setPerpage(0);
+                }
+            }
+
+            // 정렬 방향
+            String orderway = getOrderway();
+            if (orderway == null || orderway.isEmpty()) {
+                orderway = "desc";
+            }
+            setOrderway(orderway);
         }
     }
 }

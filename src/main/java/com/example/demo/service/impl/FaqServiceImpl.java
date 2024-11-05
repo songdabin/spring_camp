@@ -25,6 +25,8 @@ public class FaqServiceImpl implements FaqService {
         this.userRepository = userRepository;
     }
 
+    /**/
+
     @Override
     public DefaultDto.CreateResDto create(FaqDto.CreateReqDto param) {
         return faqRepository.save(param.toEntity()).toCreateResDto();
@@ -45,22 +47,15 @@ public class FaqServiceImpl implements FaqService {
         faqRepository.save(faq);
     }
 
-    public FaqDto.DetailResDto entityToDto(Faq faq) {
-        FaqDto.DetailResDto result = new FaqDto.DetailResDto();
+    @Override
+    public void delete(Long id) {
+        Faq faq = faqRepository.findById(id).orElseThrow(() -> new RuntimeException(""));
 
-        result.setId(faq.getId());
-        result.setTitle(faq.getTitle());
-        result.setContent(faq.getContent());
-        result.setUserId(faq.getUserId());
+        faqRepository.delete(faq);
+    }
 
-        Long userId = faq.getUserId();
-        try {
-            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException(""));
-            result.setUserUsername(user.getUsername());
-        } catch(Exception e) {
-        }
-
-        return result;
+    public FaqDto.DetailResDto get(Long id) {
+        return faqMapper.detail(id);
     }
 
     public List<FaqDto.DetailResDto> detailList(List<FaqDto.DetailResDto> list) {
@@ -73,10 +68,13 @@ public class FaqServiceImpl implements FaqService {
     }
 
     @Override
+    public FaqDto.DetailResDto detail(Long id) {
+        return get(id);
+    }
+
+    @Override
     public List<FaqDto.DetailResDto> list(FaqDto.ListReqDto param) {
         return detailList(faqMapper.list(param));
-
-        // return faqMapper.list(param);
     }
 
     @Override
@@ -84,67 +82,16 @@ public class FaqServiceImpl implements FaqService {
         DefaultDto.PagedListResDto returnVal = DefaultDto.PagedListResDto.init(param, faqMapper.pagedListCount(param));
         returnVal.setList(detailList(faqMapper.pagedList(param)));
         return returnVal;
-
-        /*
-        // 반복해서 사용할 코드이기 때문에, DefaultDto의 init으로 코드 이동
-        int perpage = param.getPerpage();
-        int pagecount = itemcount/perpage;
-        if (itemcount % perpage > 0) {
-            pagecount++;
-        }
-        int callpage = param.getCallpage();
-
-        if (callpage < 1) {
-            callpage = 1;
-        }
-        if (callpage > pagecount) {
-            callpage = pagecount;
-        }
-
-        int offset = (callpage - 1) * perpage;
-        param.setOffset(offset);
-
-        // 정렬 기준
-        String orderby = param.getOrderby();
-        if (orderby == null || "".equals(orderby)) {
-            orderby = "created_at";
-        }
-        param.setOrderby(orderby);
-
-        // 정렬 방향
-        String orderway = param.getOrderway();
-        if (orderway == null || "".equals(orderway)) {
-            orderway = "desc";
-        }
-        param.setOrderway(orderway);
-
-        // 파라미터 완성 후 리스트 조회
-        List<FaqDto.DetailResDto> plist = faqMapper.pagedList(param);
-
-        DefaultDto.PagedListResDto returnVal = DefaultDto.PagedListResDto.builder()
-                .itemcount(itemcount)
-                .pagecount(pagecount)
-                .callpage(callpage)
-                .list(detailList(plist))
-                .build();
-
-        return returnVal;
-        */
-    }
-
-    public FaqDto.DetailResDto get(Long id) {
-        return faqMapper.detail(id);
     }
 
     @Override
-    public FaqDto.DetailResDto detail(Long id) {
-        return get(id);
-    }
-
-    @Override
-    public void delete(Long id) {
-        Faq faq = faqRepository.findById(id).orElseThrow(() -> new RuntimeException(""));
-
-        faqRepository.delete(faq);
+    public List<FaqDto.DetailResDto> scrollList(FaqDto.ScrollListReqDto param) {
+        param.init();
+        Long cursor = param.getCursor();
+        if (cursor != null) {
+            Faq faq = faqRepository.findById(cursor).orElseThrow(() -> new RuntimeException(""));
+            param.setCreatedAt(faq.getCreatedAt() + "");
+        }
+        return detailList(faqMapper.scrollList(param));
     }
 }

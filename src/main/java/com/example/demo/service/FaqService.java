@@ -9,9 +9,10 @@ import java.util.List;
 @Service
 public interface FaqService {
     DefaultDto.CreateResDto create(FaqDto.CreateReqDto param);
-    List<FaqDto.DetailResDto> list(FaqDto.ListReqDto param);
-    DefaultDto.PagedListResDto pagedList(FaqDto.PagedListReqDto param);
-    FaqDto.DetailResDto detail(Long id);
     void update(FaqDto.UpdateReqDto param);
     void delete(Long id);
+    FaqDto.DetailResDto detail(Long id);
+    List<FaqDto.DetailResDto> list(FaqDto.ListReqDto param);
+    DefaultDto.PagedListResDto pagedList(FaqDto.PagedListReqDto param);
+    List<FaqDto.DetailResDto> scrollList(FaqDto.ScrollListReqDto param);
 }

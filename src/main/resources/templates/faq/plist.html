@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Notice paged list</title>
+    <title>FAQ paged list</title>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 </head>
 <body>
@@ -10,13 +10,13 @@
     요청페이지 : <input type="number" id="search_callpage" value="1" onchange="pList()"/>
     한번에 볼 페이지 수: <input type="number" id="search_perpage" value="3" onchange="pList()"/>
     정렬기준 :
-    <select id="search_orderby">
+    <select id="search_orderby" onchange="pList()">
         <option value="created_at">시간순</option>
         <option value="title">제목순</option>
     </select>
 
     정렬방향 :
-    <select id="search_orderway">
+    <select id="search_orderway" onchange="pList()">
         <option value="desc">반대 순서</option>
         <option value="asc">원래 순서</option>
     </select>
@@ -107,10 +107,6 @@
                     $("#div_page_number").append(
                         "<a href='javascript:listener_callpage("+obj_data["pagecount"]+")'>&gt;&gt;</a> &nbsp; &nbsp;"
                     );
-
-                    /*
-                    << 12 13 14 15 '16' 17 18 19 20 >>
-                    * */
                 },
                 error: (obj_data, status, xhr)=>{
                     alert("error!!");
