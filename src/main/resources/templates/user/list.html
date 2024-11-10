@@ -6,32 +6,41 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 </head>
 <body>
-  List
-  <div id="div_list"></div>
-  <button onclick="list_user()">유저 전체 목록</button>
+    User List
+    검색: <input id="search_user_username"/>
+    <div id="div_list"></div>
 
-  <script>
-    function list_user() {
-      $.ajax({
-        url:"/api/user/list",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        data: {},
-        cache: false,
-        success: (obj_data, status, xhr)=>{
-          alert(JSON.stringify(obj_data));
-          for (let each of obj_data) {
-            $("#div_list").append(
-                    "<a href='/user/detail/"+each["id"]+"'>" + each["id"] + "</a>" + "//" + each["name"] + "<br />"
-            );
-          }
-        },
-        error: (obj_data, status, xhr)=>{
-          alert("ERROR!!!!");
-          alert(JSON.stringify(obj_data));
+    <button onclick="list_user()">유저 전체 목록</button>
+
+    <script>
+        $( document ).ready(function () {
+            list_user();
+        });
+
+        function list_user() {
+            $.ajax({
+                url: "/api/user/list",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                data: {
+                    username: $("#search_user_username").val()
+                },
+                cache: false,
+                success: (obj_data, status, xhr) => {
+                    alert(JSON.stringify(obj_data));
+                    $("#div_list").html("");
+                    for (let each of obj_data) {
+                        $("#div_list").append(
+                            "<a href='/user/detail/" + each["id"] + "'>" + each["id"] + "</a>" + "//" + each["name"] + "<br />"
+                        );
+                    }
+                },
+                error: (obj_data, status, xhr) => {
+                    alert("ERROR!!!!");
+                    alert(JSON.stringify(obj_data));
+                }
+            })
         }
-      })
-    }
-  </script>
+    </script>
 </body>
 </html>

@@ -1,89 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0/EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.FaqMapper">
+    <!---->
 
-        <!---->
+    <!--
+    /*
+        1)
+        SELECT faq.id
+        , faq.title
+        , faq.content
+        , faq.user_id as userId
+        , user.username as userUsername
+        FROM faq, user
+        WHERE faq.id = #{id}
+          AND faq.user_id = user.id
 
-        <!--
-        /*
-            1)
-            SELECT faq.id
-            , faq.title
-            , faq.content
-            , faq.user_id as userId
+        2)
+        SELECT faq.id
+             , faq.title
+             , faq.content
+             , faq.user_id as userId
             , user.username as userUsername
-            FROM faq, user
-            WHERE faq.id = #{id}
-              AND faq.user_id = user.id
+        FROM faq
+        LEFT JOIN user
+          ON faq.user_id = user.id
+        WHERE faq.id = #{id}
+        */
+    -->
+    <select id="detail" parameterType="hashMap" resultType="com.example.demo.dto.FaqDto$DetailResDto">
+        SELECT faq.id
+             , faq.deleted
+             , faq.created_at as createdAt
+             , faq.modified_at as modifiedAt
+             , faq.title
+             , faq.content
+             , faq.user_id as userId
+             , user.username as userUsername
+        FROM faq
+        LEFT JOIN user
+        ON faq.user_id = user.id
+        WHERE faq.id = #{id}
+    </select>
+    <select id="list" parameterType="hashMap" resultType="com.example.demo.dto.FaqDto$DetailResDto">
+        SELECT faq.id
+        FROM faq
+        WHERE faq.id is not NULL
+        <if test = "deleted != null and deleted !=''">AND faq.deleted = #{deleted}</if>
+        <if test = "title != null and title !=''">AND faq.title LIKE CONCAT('%', #{title}, '%')</if>
+    </select>
 
-            2)
-            SELECT faq.id
-                 , faq.title
-                 , faq.content
-                 , faq.user_id as userId
-                , user.username as userUsername
-            FROM faq
-            LEFT JOIN user
-              ON faq.user_id = user.id
-            WHERE faq.id = #{id}
-            */
-        -->
-        <select id="detail" parameterType="hashMap" resultType="com.example.demo.dto.FaqDto$DetailResDto">
-            SELECT faq.id
-                 , faq.deleted
-                 , faq.created_at as createdAt
-                 , faq.modified_at as modifiedAt
-                 , faq.title
-                 , faq.content
-                 , faq.user_id as userId
-                 , user.username as userUsername
-            FROM faq
-            LEFT JOIN user
-            ON faq.user_id = user.id
-            WHERE faq.id = #{id}
-        </select>
-        <select id="list" parameterType="hashMap" resultType="com.example.demo.dto.FaqDto$DetailResDto">
-            SELECT faq.id
-            FROM faq
-            WHERE faq.id is not NULL
-            <if test = "deleted != null and deleted !=''">AND faq.deleted = #{deleted}</if>
-            <if test = "title != null and title !=''">AND faq.title LIKE CONCAT('%', #{title}, '%')</if>
-        </select>
+    <select id="pagedList" parameterType="hashMap" resultType="com.example.demo.dto.FaqDto$DetailResDto">
+        SELECT faq.id
+        FROM faq
+        WHERE faq.id is not NULL
+        <if test = "deleted != null and deleted !=''">AND faq.deleted = #{deleted}</if>
+        <if test = "title != null and title !=''">AND faq.title LIKE CONCAT('%', #{title}, '%')</if>
+        <if test = "orderby != null and orderby =='created_at'">ORDER BY faq.created_at</if>
+        <if test = "orderby != null and orderby =='title'">ORDER BY faq.title</if>
+        <if test = "orderway != null and orderway =='desc'">DESC</if>
+        <if test = "orderway != null and orderway =='asc'">ASC</if>
+        LIMIT #{offset}, #{perpage}
+    </select>
+    <select id="pagedListCount" parameterType="hashMap" resultType="Integer">
+        SELECT count(faq.id) as listsize
+        FROM faq
+        WHERE faq.id is not NULL
+        <if test = "deleted != null and deleted !=''">AND faq.deleted = #{deleted}</if>
+        <if test = "title != null and title !=''">AND faq.title LIKE CONCAT('%', #{title}, '%')</if>
+    </select>
 
-        <select id="pagedList" parameterType="hashMap" resultType="com.example.demo.dto.FaqDto$DetailResDto">
-            SELECT faq.id
-            FROM faq
-            WHERE faq.id is not NULL
-            <if test = "deleted != null and deleted !=''">AND faq.deleted = #{deleted}</if>
-            <if test = "title != null and title !=''">AND faq.title LIKE CONCAT('%', #{title}, '%')</if>
-            <if test = "orderby != null and orderby =='created_at'">ORDER BY faq.created_at</if>
-            <if test = "orderby != null and orderby =='title'">ORDER BY faq.title</if>
-            <if test = "orderway != null and orderway =='desc'">DESC</if>
-            <if test = "orderway != null and orderway =='asc'">ASC</if>
-            LIMIT #{offset}, #{perpage}
-        </select>
-        <select id="pagedListCount" parameterType="hashMap" resultType="Integer">
-            SELECT count(faq.id) as listsize
-            FROM faq
-            WHERE faq.id is not NULL
-            <if test = "deleted != null and deleted !=''">AND faq.deleted = #{deleted}</if>
-            <if test = "title != null and title !=''">AND faq.title LIKE CONCAT('%', #{title}, '%')</if>
-        </select>
-
-        <select id="scrollList" parameterType="hashMap" resultType="com.example.demo.dto.FaqDto$DetailResDto">
-            SELECT faq.id
-            FROM faq
-            WHERE faq.id is not NULL
-            <if test = "deleted != null and deleted !=''">AND faq.deleted = #{deleted}</if>
-            <if test = "title != null and title !=''">AND faq.title LIKE CONCAT('%', #{title}, '%')</if>
-            <if test = "orderway != null and orderway =='desc'">
-                <if test = "createdAt != null and createdAt !=''">AND #{createdAt} > faq.created_at</if>
-                ORDER BY faq.created_at DESC
-            </if>
-            <if test = "orderway != null and orderway =='asc'">
-                <if test = "createdAt != null and createdAt !=''">AND faq.created_at > #{createdAt}</if>
-                ORDER BY faq.created_at ASC
-            </if>
-            LIMIT 0, #{perpage}
-        </select>
-    </mapper>
+    <select id="scrollList" parameterType="hashMap" resultType="com.example.demo.dto.FaqDto$DetailResDto">
+        SELECT faq.id
+        FROM faq
+        WHERE faq.id is not NULL
+        <if test = "deleted != null and deleted !=''">AND faq.deleted = #{deleted}</if>
+        <if test = "title != null and title !=''">AND faq.title LIKE CONCAT('%', #{title}, '%')</if>
+        <if test = "orderway != null and orderway =='desc'">
+            <if test = "createdAt != null and createdAt !=''">AND #{createdAt} > faq.created_at</if>
+            ORDER BY faq.created_at DESC
+        </if>
+        <if test = "orderway != null and orderway =='asc'">
+            <if test = "createdAt != null and createdAt !=''">AND faq.created_at > #{createdAt}</if>
+            ORDER BY faq.created_at ASC
+        </if>
+        LIMIT 0, #{perpage}
+    </select>
+</mapper>

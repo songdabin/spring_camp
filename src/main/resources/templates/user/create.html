@@ -6,8 +6,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 </head>
 <body>
-    Create
-    <div id="div_id" class="div-abcde">글 입력 테스트</div>
+    User Create
     아이디
     <input type="text" id="create_user_username"/>
     비밀번호
@@ -18,17 +17,11 @@
     <input type="text" id="create_user_phone"/>
 
     <button onclick="create_user()">저장</button>
-    <button onclick="change_html()">글 바꾸기</button>
 
     <script>
-        function change_html() {
-            let create_board_title = $("#create_board_title").val();
-            $("#div_id").html(create_board_title);
-        }
-
         function create_user() {
             $.ajax({
-                url:"/api/user/create",
+                url:"/api/user",
                 type: "POST",
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify({

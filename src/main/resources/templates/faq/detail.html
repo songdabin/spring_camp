@@ -6,106 +6,106 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 </head>
 <body>
-<div style="display: flex; flex-direction: column;">
-    <h4>
-        FAQ Detail
-    </h4>
+    <div style="display: flex; flex-direction: column;">
+        <h4>
+            FAQ Detail
+        </h4>
 
-    <div>
-        Id
-        <input type="text" id="detail_faq_id" disabled/>
-        Title
-        <input type="text" id="detail_faq_title"/>
-        Content
-        <input type="text" id="detail_faq_content"/>
-        Username
-        <input type="text" id="detail_faq_username" disabled/>
+        <div>
+            Id
+            <input type="text" id="detail_faq_id" disabled/>
+            Title
+            <input type="text" id="detail_faq_title"/>
+            Content
+            <input type="text" id="detail_faq_content"/>
+            Username
+            <input type="text" id="detail_faq_username" disabled/>
 
-        <button onclick="update_faq()">
-            edit
-        </button>
-        <button onclick="delete_faq()">
-            delete
-        </button>
+            <button onclick="update_faq()">
+                edit
+            </button>
+            <button onclick="delete_faq()">
+                delete
+            </button>
+        </div>
     </div>
-</div>
 
-<script>
-    // url에서 id값 추출
-    let temp_url = window.location.href;
-    let split_temp_url = temp_url.split('/');
-    let final_id = split_temp_url[split_temp_url.length - 1];
-    let split_q = final_id.split("?");
-    if (split_q.length > 0) {
-        final_id = split_q[0];
-    }
+    <script>
+        // url에서 id값 추출
+        let temp_url = window.location.href;
+        let split_temp_url = temp_url.split('/');
+        let final_id = split_temp_url[split_temp_url.length - 1];
+        let split_q = final_id.split("?");
+        if (split_q.length > 0) {
+            final_id = split_q[0];
+        }
 
-    // document가 준비되면 detail_faq() 실행
-    $(document).ready(function () {
-        detail_faq();
-    })
+        // document가 준비되면 detail_faq() 실행
+        $(document).ready(function () {
+            detail_faq();
+        })
 
-    function update_faq() {
-        $.ajax({
-            url: "/api/faq",
-            type: "PUT",
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify({
-                id: final_id,
-                title: $("#detail_faq_title").val(),
-                content: $("#detail_faq_content").val()
-            }),
-            cache: false,
-            success: (obj_data, status, xhr) => {
-                alert(JSON.stringify(obj_data));
-            },
-            error: (obj_data, status, xhr) => {
-                alert("error!!");
-                alert(JSON.stringify(obj_data));
-            }
-        });
-    }
+        function update_faq() {
+            $.ajax({
+                url: "/api/faq",
+                type: "PUT",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({
+                    id: final_id,
+                    title: $("#detail_faq_title").val(),
+                    content: $("#detail_faq_content").val()
+                }),
+                cache: false,
+                success: (obj_data, status, xhr) => {
+                    alert(JSON.stringify(obj_data));
+                },
+                error: (obj_data, status, xhr) => {
+                    alert("error!!");
+                    alert(JSON.stringify(obj_data));
+                }
+            });
+        }
 
-    function detail_faq() {
-        $.ajax({
-            url: "/api/faq/detail",
-            type: "GET",
-            contentType: 'application/json; charset=utf-8',
-            data: {
-                id: final_id
-            },
-            cache: false,
-            success: (obj_data, status, xhr) => {
-                $("#detail_faq_id").val(obj_data.id);
-                $("#detail_faq_title").val(obj_data["title"]);
-                $("#detail_faq_content").val(obj_data["content"]);
-                $("#detail_faq_username").val(obj_data["userUsername"]);
-            },
-            error: (obj_data, status, xhr) => {
-                alert("error!!");
-                alert(JSON.stringify(obj_data));
-            }
-        });
-    }
-
-    function delete_faq() {
-        $.ajax({
-            url: "/api/faq",
-            type: "DELETE",
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify({
+        function detail_faq() {
+            $.ajax({
+                url: "/api/faq/detail",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                data: {
                     id: final_id
-            }),
-            cache: false,
-            success: (obj_data, status, xhr) => {
-                alert(JSON.stringify(obj_data));
-            },
-            error: (obj_data, status, xhr) => {
-                alert("error!!");
-                alert(JSON.stringify(obj_data));
-            }
-        });
-    }
-</script>
+                },
+                cache: false,
+                success: (obj_data, status, xhr) => {
+                    $("#detail_faq_id").val(obj_data.id);
+                    $("#detail_faq_title").val(obj_data["title"]);
+                    $("#detail_faq_content").val(obj_data["content"]);
+                    $("#detail_faq_username").val(obj_data["userUsername"]);
+                },
+                error: (obj_data, status, xhr) => {
+                    alert("error!!");
+                    alert(JSON.stringify(obj_data));
+                }
+            });
+        }
+
+        function delete_faq() {
+            $.ajax({
+                url: "/api/faq",
+                type: "DELETE",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({
+                        id: final_id
+                }),
+                cache: false,
+                success: (obj_data, status, xhr) => {
+                    alert(JSON.stringify(obj_data));
+                },
+                error: (obj_data, status, xhr) => {
+                    alert("error!!");
+                    alert(JSON.stringify(obj_data));
+                }
+            });
+        }
+    </script>
 </body>
 </html>

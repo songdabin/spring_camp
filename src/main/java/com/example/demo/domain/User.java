@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.example.demo.dto.DefaultDto;
 import com.example.demo.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,11 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Entity // DB 알아서 만들어주고, 내 DB랑 결합해서 사용할 거라는 의미
-public class User {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id // Primary Key 지정
-    Long id;
-
+public class User extends AuditingFields {
     @Setter @Column(unique = true, nullable = false)
     String username;
 
@@ -23,10 +20,21 @@ public class User {
     @Setter String name;
     @Setter String phone;
 
-    public UserDto.CreateResDto toCreateResDto() {
-        UserDto.CreateResDto result = new UserDto.CreateResDto();
-        result.setId(getId());
+    protected User(){}
 
-        return result;
+    private User(Boolean deleted, String username, String password, String name, String phone) {
+        this.deleted = deleted;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+    }
+
+    public static User of(String username, String password, String name, String phone) {
+        return new User(false, username, password, name, phone);
+    }
+
+    public DefaultDto.CreateResDto toCreateResDto() {
+        return DefaultDto.CreateResDto.builder().id(getId()).build();
     }
 }

@@ -6,106 +6,107 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 </head>
 <body>
-<div style="display: flex; flex-direction: column;">
-    <h4>
-        Detail
-    </h4>
+    <div style="display: flex; flex-direction: column;">
+        <h4>
+            User Detail
+        </h4>
 
-    <div>
-        Id
-        <input type="text" id="detail_id" disabled/>
-        Username
-        <input type="text" id="detail_username" disabled/>
-        Name
-        <input type="text" id="detail_name"/>
-        Phone
-        <input type="text" id="detail_phone"/>
+        <div>
+            Id
+            <input type="text" id="detail_id" disabled/>
+            Username
+            <input type="text" id="detail_username" disabled/>
+            Name
+            <input type="text" id="detail_name"/>
+            Phone
+            <input type="text" id="detail_phone"/>
 
-        <button onclick="update_user()">
-            edit
-        </button>
-        <button onclick="delete_user()">
-            delete
-        </button>
+            <button onclick="update_user()">
+                edit
+            </button>
+            <button onclick="delete_user()">
+                delete
+            </button>
+        </div>
     </div>
-</div>
 
-<script>
-    // url에서 id값 추출
-    let temp_url = window.location.href;
-    let split_temp_url = temp_url.split('/');
-    let final_id = split_temp_url[split_temp_url.length - 1];
-    let split_q = final_id.split("?");
-    if (split_q.length > 0) {
-        final_id = split_q[0];
-    }
+    <script>
+        // url에서 id값 추출
+        let temp_url = window.location.href;
+        let split_temp_url = temp_url.split('/');
+        let final_id = split_temp_url[split_temp_url.length - 1];
+        let split_q = final_id.split("?");
+        if (split_q.length > 0) {
+            final_id = split_q[0];
+        }
 
-    // document가 준비되면 detail_user() 실행
-    $(document).ready(function () {
-        detail_user();
-    })
+        // document가 준비되면 detail_user() 실행
+        $(document).ready(function () {
+            detail_user();
+        })
 
-    function update_user() {
-        $.ajax({
-            url: "/api/user/update",
-            type: "GET",
-            contentType: 'application/json; charset=utf-8',
-            data: {
-                id: final_id,
-                name: $("#detail_name").val(),
-                phone: $("#detail_phone").val()
-            },
-            cache: false,
-            success: (obj_data, status, xhr) => {
-                alert(JSON.stringify(obj_data));
-            },
-            error: (obj_data, status, xhr) => {
-                alert("error!!");
-                alert(JSON.stringify(obj_data));
-            }
-        });
-    }
+        function update_user() {
+            alert($("#detail_phone").val());
+            $.ajax({
+                url: "/api/user",
+                type: "PUT",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({
+                    id: final_id,
+                    name: $("#detail_name").val(),
+                    phone: $("#detail_phone").val()
+                }),
+                cache: false,
+                success: (obj_data, status, xhr) => {
+                    alert(JSON.stringify(obj_data));
+                },
+                error: (obj_data, status, xhr) => {
+                    alert("error!!");
+                    alert(JSON.stringify(obj_data));
+                }
+            });
+        }
 
-    function detail_user() {
-        $.ajax({
-            url: "/api/user/detail",
-            type: "GET",
-            contentType: 'application/json; charset=utf-8',
-            data: {
-                id: final_id
-            },
-            cache: false,
-            success: (obj_data, status, xhr) => {
-                $("#detail_id").val(obj_data["id"]);
-                $("#detail_username").val(obj_data["username"]);
-                $("#detail_name").val(obj_data["name"]);
-                $("#detail_phone").val(obj_data["phone"]);
-            },
-            error: (obj_data, status, xhr) => {
-                alert("error!!");
-                alert(JSON.stringify(obj_data));
-            }
-        });
-    }
+        function detail_user() {
+            $.ajax({
+                url: "/api/user/detail",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                data: {
+                    id: final_id
+                },
+                cache: false,
+                success: (obj_data, status, xhr) => {
+                    $("#detail_id").val(obj_data["id"]);
+                    $("#detail_username").val(obj_data["username"]);
+                    $("#detail_name").val(obj_data["name"]);
+                    $("#detail_phone").val(obj_data["phone"]);
+                },
+                error: (obj_data, status, xhr) => {
+                    alert("error!!");
+                    alert(JSON.stringify(obj_data));
+                }
+            });
+        }
 
-    function delete_user() {
-        $.ajax({
-            url: "/api/user/delete",
-            type: "GET",
-            contentType: 'application/json; charset=utf-8',
-            data: {
-                id: final_id
-            },
-            cache: false,
-            success: (obj_data, status, xhr) => {
-                alert(JSON.stringify(obj_data));
-            },
-            error: (obj_data, status, xhr) => {
-                alert("error!!");
-                alert(JSON.stringify(obj_data));
-            }
-        });
-    }
-</script>
+        function delete_user() {
+            $.ajax({
+                url: "/api/user",
+                type: "DELETE",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({
+                    id: final_id
+                }),
+                cache: false,
+                success: (obj_data, status, xhr) => {
+                    alert(JSON.stringify(obj_data));
+                },
+                error: (obj_data, status, xhr) => {
+                    alert("error!!");
+                    alert(JSON.stringify(obj_data));
+                }
+            });
+        }
+    </script>
 </body>
 </html>

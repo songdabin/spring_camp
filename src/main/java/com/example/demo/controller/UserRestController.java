@@ -1,12 +1,13 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.User;
+import com.example.demo.dto.DefaultDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RequestMapping("/api/user")
 @RestController
@@ -22,8 +23,8 @@ public class UserRestController {
     }
 
     @PostMapping("/signup")
-    public UserDto.CreateResDto signup(@RequestBody UserDto.CreateReqDto param) {
-        return userService.signup(param);
+    public ResponseEntity<DefaultDto.CreateResDto> signup(@RequestBody UserDto.CreateReqDto param) {
+        return ResponseEntity.ok(userService.signup(param));
     }
 
     @GetMapping("/check")
@@ -33,28 +34,41 @@ public class UserRestController {
 
     /**/
 
-    @PostMapping("/create")
-    public UserDto.CreateResDto create(@RequestBody UserDto.CreateReqDto param) {
-        return userService.create(param);
+    @PostMapping("")
+    public ResponseEntity<DefaultDto.CreateResDto> create(@RequestBody UserDto.CreateReqDto param) {
+        return ResponseEntity.ok(userService.signup(param));
     }
 
-    @GetMapping("/list")
-    public List<User> list() {
-        return userService.list();
+    @PutMapping("")
+    public ResponseEntity<String> update(@RequestBody UserDto.UpdateReqDto param) {
+        System.out.println(param.getName() + param.getPhone());
+        userService.update(param);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity<String> delete(@RequestBody UserDto.UpdateReqDto param){
+        userService.delete(param.getId());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/detail")
-    public User detail(@RequestParam Long id) {
-        return userService.detail(id);
+    public ResponseEntity<UserDto.DetailResDto> detail(@RequestParam Long id) {
+        return ResponseEntity.ok(userService.detail(id));
     }
 
-    @GetMapping("/update")
-    public Map<String, Object> update(@RequestParam Map<String, Object> param) {
-        return userService.update(param);
+    @GetMapping("/list")
+    public ResponseEntity<List<UserDto.DetailResDto>> list(UserDto.ListReqDto param) {
+        return ResponseEntity.ok(userService.list(param));
     }
 
-    @GetMapping("/delete")
-    public Map<String, Object> delete(@RequestParam Map<String, Object> params){
-        return userService.delete(Long.parseLong(params.get("id") + ""));
+    @GetMapping("/plist")
+    public ResponseEntity<DefaultDto.PagedListResDto> plist(UserDto.PagedListReqDto param) {
+        return ResponseEntity.ok(userService.pagedList(param));
+    }
+
+    @GetMapping("/mlist")
+    public ResponseEntity<List<UserDto.DetailResDto>> mlist(UserDto.ScrollListReqDto param) {
+        return ResponseEntity.ok(userService.scrollList(param));
     }
 }
