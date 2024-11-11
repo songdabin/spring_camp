@@ -4,23 +4,53 @@
     <meta charset="UTF-8">
     <title>User Detail</title>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <style>
+        .outer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .inner-center {
+            width: 45vw;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3vh;
+            gap: 2vw;
+        }
+    </style>
 </head>
 <body>
-    <div style="display: flex; flex-direction: column;">
-        <h4>
+    <div class="outer">
+        <h2 style="margin-bottom: 3vh">
             User Detail
-        </h4>
+        </h2>
 
-        <div>
+        <div class="inner-center">
             Id
             <input type="text" id="detail_id" disabled/>
             Username
             <input type="text" id="detail_username" disabled/>
+        </div>
+
+        <div class="inner-center">
             Name
             <input type="text" id="detail_name"/>
             Phone
             <input type="text" id="detail_phone"/>
+        </div>
 
+        <div class="inner-center">
+            Photo
+
+            <input type="file" id="input_file" onchange="readURLFile(this)"/>
+            <button onclick="imgfile_upload()">
+                프로필 사진 업로드
+            </button>
+
+            <img id="img_test" alt="test" src=""/>
+        </div>
+
+        <div>
             <button onclick="update_user()">
                 edit
             </button>
@@ -105,6 +135,42 @@
                     alert("error!!");
                     alert(JSON.stringify(obj_data));
                 }
+            });
+        }
+
+        /**/
+
+        // Image File Upload
+        let tempFile = null;
+
+        function readURLFile(input) {
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+                reader.readAsDataURL(input.files[0]);
+                reader.onload = function (e) {
+                    tempFile = input.files[0];
+                }
+            }
+        }
+
+        function imgfile_upload() {
+            let fileData = new FormData();
+            fileData.append("file", tempFile);
+
+            $.ajax({
+                url: "/api/upload",
+                type: "POST",
+                data: fileData,
+                cache : false,
+                contentType : false,
+                processData : false,
+                success: (data, status, xhr) => {
+                    alert(JSON.stringify(data));
+                    $("#img_test").attr("src", "/image/" + data);
+                },
+                error: (data) => {
+                    alert("error");
+                },
             });
         }
     </script>
