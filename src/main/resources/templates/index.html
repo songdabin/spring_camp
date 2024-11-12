@@ -3,8 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 </head>
 <body>
-This is index page.
+    This is index page.
+    <button onclick="user_logout()">log out</button>
+
+    <script>
+        let userId = localStorage.getItem("userId");
+        alert(userId);
+
+        function user_logout() {
+            localStorage.clear();
+        }
+    </script>
 </body>
 </html>

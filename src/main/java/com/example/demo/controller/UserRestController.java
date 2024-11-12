@@ -18,8 +18,8 @@ public class UserRestController {
     }
 
     @PostMapping("/login")
-    public UserDto.LoginResDto login(@RequestBody UserDto.LoginReqDto param) {
-        return userService.login(param);
+    public ResponseEntity<DefaultDto.CreateResDto> login(@RequestBody UserDto.LoginReqDto param) {
+        return ResponseEntity.ok(userService.login(param));
     }
 
     @PostMapping("/signup")
@@ -36,12 +36,11 @@ public class UserRestController {
 
     @PostMapping("")
     public ResponseEntity<DefaultDto.CreateResDto> create(@RequestBody UserDto.CreateReqDto param) {
-        return ResponseEntity.ok(userService.signup(param));
+        return ResponseEntity.ok(userService.create(param));
     }
 
     @PutMapping("")
     public ResponseEntity<String> update(@RequestBody UserDto.UpdateReqDto param) {
-        System.out.println(param.getName() + param.getPhone());
         userService.update(param);
         return ResponseEntity.ok().build();
     }

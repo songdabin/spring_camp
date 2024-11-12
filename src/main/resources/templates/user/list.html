@@ -7,7 +7,8 @@
 </head>
 <body>
     User List
-    검색: <input id="search_user_username"/>
+    이름 검색: <input id="search_user_name" />
+    전화번호 검색: <input id="search_user_phone" />
     <div id="div_list"></div>
 
     <button onclick="list_user()">유저 전체 목록</button>
@@ -23,7 +24,8 @@
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
                 data: {
-                    username: $("#search_user_username").val()
+                    name: $("#search_user_name").val()
+                    , phone: $("#search_user_phone").val()
                 },
                 cache: false,
                 success: (obj_data, status, xhr) => {

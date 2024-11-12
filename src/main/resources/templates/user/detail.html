@@ -27,9 +27,9 @@
 
         <div class="inner-center">
             Id
-            <input type="text" id="detail_id" disabled/>
+            <input type="text" id="detail_id" readonly/>
             Username
-            <input type="text" id="detail_username" disabled/>
+            <input type="text" id="detail_username" readonly/>
         </div>
 
         <div class="inner-center">
@@ -76,7 +76,6 @@
         })
 
         function update_user() {
-            alert($("#detail_phone").val());
             $.ajax({
                 url: "/api/user",
                 type: "PUT",

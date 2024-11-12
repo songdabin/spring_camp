@@ -20,20 +20,13 @@ public class UserServiceImpl implements UserService {
         this.userMapper = userMapper;
     }
 
-    /**/
-
     @Override
-    public UserDto.LoginResDto login(UserDto.LoginReqDto param) {
-        String username = param.getUsername();
-        String password = param.getPassword();
-        User user = userRepository.findByUsernameAndPassword(username, password);
+    public DefaultDto.CreateResDto login(UserDto.LoginReqDto param) {
+        User user = userRepository.findByUsernameAndPassword(param.getUsername(), param.getPassword());
         if(user == null){
-            throw new RuntimeException("id password not matched");
+            throw new RuntimeException("username or password not matched");
         }
-        UserDto.LoginResDto res = new UserDto.LoginResDto();
-//        res.setResult(true);
-        res.setId(user.getId());
-        return res;
+        return DefaultDto.CreateResDto.builder().id(user.getId()).build();
     }
 
     @Override
@@ -55,11 +48,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**/
+
     @Override
     public DefaultDto.CreateResDto create(UserDto.CreateReqDto param) {
         User user = userRepository.findByUsername(param.getUsername());
         if (user != null) {
-            throw new RuntimeException("id exist");
+            throw new RuntimeException("already exist");
         }
 
         return userRepository.save(param.toEntity()).toCreateResDto();
@@ -67,15 +62,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(UserDto.UpdateReqDto param) {
-        User user = userRepository.findById(Long.parseLong(param.getId() + "")).orElseThrow(() -> new RuntimeException(""));
-
-        /*if(param.get!=null) {
-            user.setUsername((String) param.get("username"));
-        }
-
-        if(param.get("password")!=null) {
-            user.setPassword((String) param.get("password"));
-        }*/
+        User user = userRepository.findById(param.getId()).orElseThrow(() -> new RuntimeException(""));
 
         if(param.getName() != null) {
             user.setName(param.getName());
@@ -120,9 +107,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public DefaultDto.PagedListResDto pagedList(UserDto.PagedListReqDto param) {
-        DefaultDto.PagedListResDto returnVal = DefaultDto.PagedListResDto.init(param, userMapper.pagedListCount(param));
-        returnVal.setList(detailList(userMapper.pagedList(param)));
-        return returnVal;
+        DefaultDto.PagedListResDto rtnVal = DefaultDto.PagedListResDto.init(param, userMapper.pagedListCount(param));
+        rtnVal.setList(detailList(userMapper.pagedList(param)));
+        return rtnVal;
     }
 
     @Override

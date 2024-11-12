@@ -7,7 +7,6 @@
              , user.created_at as createdAt
              , user.modified_at as modifiedAt
              , user.username
-             , user.password
              , user.name
              , user.phone
         FROM user
@@ -18,7 +17,8 @@
         FROM user
         WHERE user.id is not NULL
         <if test = "deleted != null and deleted !=''">AND user.deleted = #{deleted}</if>
-        <if test = "username != null and username !=''">AND user.username LIKE CONCAT('%', #{username}, '%')</if>
+        <if test = "name != null and name !=''">AND user.name LIKE CONCAT('%', #{name}, '%')</if>
+        <if test = "phone != null and phone !=''">AND user.phone LIKE CONCAT('%', #{phone})</if>
     </select>
 
     <select id="pagedList" parameterType="hashMap" resultType="com.example.demo.dto.UserDto$DetailResDto">
@@ -26,9 +26,10 @@
         FROM user
         WHERE user.id is not NULL
         <if test = "deleted != null and deleted !=''">AND user.deleted = #{deleted}</if>
-        <if test = "username != null and username !=''">AND user.username LIKE CONCAT('%', #{username}, '%')</if>
+        <if test = "name != null and name !=''">AND user.name LIKE CONCAT('%', #{name}, '%')</if>
+        <if test = "phone != null and phone !=''">AND user.phone LIKE CONCAT('%', #{phone})</if>
         <if test = "orderby != null and orderby =='created_at'">ORDER BY user.created_at</if>
-        <if test = "orderby != null and orderby =='username'">ORDER BY user.username</if>
+        <if test = "orderby != null and orderby =='name'">ORDER BY user.name</if>
         <if test = "orderway != null and orderway =='desc'">DESC</if>
         <if test = "orderway != null and orderway =='asc'">ASC</if>
         LIMIT #{offset}, #{perpage}
@@ -37,8 +38,8 @@
         SELECT count(user.id) as listsize
         FROM user
         WHERE user.id is not NULL
-        <if test = "deleted != null and deleted !=''">AND user.deleted = #{deleted}</if>
-        <if test = "username != null and username !=''">AND user.username LIKE CONCAT('%', #{username}, '%')</if>
+        <if test = "name != null and name !=''">AND user.name LIKE CONCAT('%', #{name}, '%')</if>
+        <if test = "phone != null and phone !=''">AND user.phone LIKE CONCAT('%', #{phone})</if>
     </select>
 
     <select id="scrollList" parameterType="hashMap" resultType="com.example.demo.dto.UserDto$DetailResDto">
@@ -46,7 +47,8 @@
         FROM user
         WHERE user.id is not NULL
         <if test = "deleted != null and deleted !=''">AND user.deleted = #{deleted}</if>
-        <if test = "username != null and username !=''">AND user.username LIKE CONCAT('%', #{username}, '%')</if>
+        <if test = "name != null and name !=''">AND user.name LIKE CONCAT('%', #{name}, '%')</if>
+        <if test = "phone != null and phone !=''">AND user.phone LIKE CONCAT('%', #{phone})</if>
         <if test = "orderway != null and orderway =='desc'">
             <if test = "createdAt != null and createdAt !=''">AND #{createdAt} > user.created_at</if>
             ORDER BY user.created_at DESC
