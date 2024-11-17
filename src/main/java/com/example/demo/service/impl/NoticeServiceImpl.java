@@ -6,109 +6,95 @@ import com.example.demo.dto.NoticeDto;
 import com.example.demo.mapper.NoticeMapper;
 import com.example.demo.repository.NoticeRepository;
 import com.example.demo.service.NoticeService;
+import com.example.demo.util.FileUpload;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class NoticeServiceImpl implements NoticeService {
-    private final NoticeRepository noticeRepository;
-    private final NoticeMapper noticeMapper;
 
-    public NoticeServiceImpl(NoticeRepository noticeRepository, NoticeMapper noticeMapper) {
-        this.noticeRepository = noticeRepository;
-        this.noticeMapper = noticeMapper;
+    private final NoticeRepository userRepository;
+    private final NoticeMapper userMapper;
+    public NoticeServiceImpl(
+            NoticeRepository userRepository
+            , NoticeMapper userMapper
+    ) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
+
+    /**/
 
     @Override
     public DefaultDto.CreateResDto create(NoticeDto.CreateReqDto param) {
-        /*Notice notice = param.toEntity();
-        notice = noticeRepository.save(notice);
-        NoticeDto.CreateResDto result = notice.toCreateResDto();
-        return result;*/
-        return noticeRepository.save(param.toEntity()).toCreateResDto();
+        System.out.println("create");
+        param.setImg(FileUpload.upload(param.getImgfile()));
+        return userRepository.save(param.toEntity()).toCreateResDto();
     }
-
     @Override
     public void update(NoticeDto.UpdateReqDto param) {
-        Notice notice = noticeRepository.findById(param.getId()).orElseThrow(() -> new RuntimeException(""));
-
+        System.out.println("update");
+        Notice user = userRepository.findById(param.getId()).orElseThrow(() -> new RuntimeException(""));
+        if(param.getDeleted() != null) {
+            user.setDeleted(param.getDeleted());
+        }
         if(param.getTitle() != null) {
-            notice.setTitle(param.getTitle());
+            user.setTitle(param.getTitle());
         }
-
         if(param.getContent() != null) {
-            notice.setContent(param.getContent());
+            user.setContent(param.getContent());
         }
-
-        noticeRepository.save(notice);
+        if(param.getImg() != null) {
+            user.setImg(param.getImg());
+        }
+        userRepository.save(user);
     }
-
-    public NoticeDto.DetailResDto entityToDto(Notice notice) {
-        NoticeDto.DetailResDto result = new NoticeDto.DetailResDto();
-
-        result.setId(notice.getId());
-        result.setTitle(notice.getTitle());
-        result.setContent(notice.getContent());
-
-        return result;
-    }
-
     @Override
-    public List<NoticeDto.DetailResDto> list(NoticeDto.ListReqDto param) {
-        List<NoticeDto.DetailResDto> list = noticeMapper.list(param);
-        return list;
+    public void delete(Long id) {
+        update(NoticeDto.UpdateReqDto.builder().id(id).deleted(true).build());
+    }
+    @Override
+    public void deletes(DefaultDto.DeletesReqDto param) {
+        for(Long id : param.getIds()){
+            delete(id);
+        }
     }
 
+    public NoticeDto.DetailResDto get(Long id) {
+        return userMapper.detail(id);
+    }
+    public List<NoticeDto.DetailResDto> detailList(List<NoticeDto.DetailResDto> list) {
+        List<NoticeDto.DetailResDto> newList = new ArrayList<>();
+        for(NoticeDto.DetailResDto each : list) {
+            newList.add(get(each.getId()));
+        }
+        return newList;
+    }
     @Override
     public NoticeDto.DetailResDto detail(Long id) {
-        NoticeDto.DetailResDto result = noticeMapper.detail(id);
-        return result;
-        /*Notice notice = noticeRepository.findById(id).orElseThrow(()-> new RuntimeException(""));
-
-        return entityToDto(notice);*/
+        return get(id);
+    }
+    @Override
+    public List<NoticeDto.DetailResDto> list(NoticeDto.ListReqDto param) {
+        return detailList(userMapper.list(param));
     }
 
     @Override
-    public Map<String, Object> delete(Long id) {
-        Notice notice = noticeRepository.findById(id).orElseThrow(() -> new RuntimeException(""));
-        notice.setDeleted(true);
-        noticeRepository.save(notice);
-
-        /*
-        noticeRepository.delete(notice);
-         */
-
-        return null;
+    public DefaultDto.PagedListResDto pagedList(NoticeDto.PagedListReqDto param){
+        DefaultDto.PagedListResDto retrunVal = DefaultDto.PagedListResDto.init(param, userMapper.pagedListCount(param));
+        retrunVal.setList(detailList(userMapper.pagedList(param)));
+        return retrunVal;
     }
-
     @Override
-    public NoticeDto.PagedListResDto pagedList(NoticeDto.PagedListReqDto param) {
-        //총 등록수 예) 22개
-        int countList = noticeMapper.pagedListCount(param);
-        //요청 페이지 예) 3페이지
-        int callpage = param.getCallpage();
-        //요청 페이지가 1보다 작을때 1로 변환
-        if(callpage < 1) { callpage = 1; }
-
-        //한번에 볼 페이지수 예) 5개씩
-        int perpage = param.getPerpage();
-        int offset = (callpage - 1) * perpage;
-
-        // 총 페이지수
-        int countPage = (int) countList / perpage;
-        if(countList % perpage > 0){
-            countPage++;
+    public List<NoticeDto.DetailResDto> scrollList(NoticeDto.ScrollListReqDto param){
+        param.init();
+        Long cursor = param.getCursor();
+        if(cursor != null){
+            Notice user = userRepository.findById(cursor).orElseThrow(() -> new RuntimeException(""));
+            param.setCreatedAt(user.getCreatedAt() + "");
         }
-
-        //요청 페이지가 총 페이지수보다 클때 총 페이지수로 변환
-        if(callpage > countPage) { callpage = countPage; }
-
-        param.setOffset(offset);
-        List<NoticeDto.DetailResDto> list = noticeMapper.pagedList(param);
-
-        return NoticeDto.PagedListResDto.builder().countList(countList).callpage(callpage).countPage(countPage).list(list).build();
+        return detailList(userMapper.scrollList(param));
     }
-
 }

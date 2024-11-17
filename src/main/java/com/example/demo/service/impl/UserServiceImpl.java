@@ -63,6 +63,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(UserDto.UpdateReqDto param) {
         User user = userRepository.findById(param.getId()).orElseThrow(() -> new RuntimeException(""));
+        if(param.getDeleted() != null) {
+            user.setDeleted(param.getDeleted());
+        }
 
         if(param.getName() != null) {
             user.setName(param.getName());
@@ -77,9 +80,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException(""));
-        user.setDeleted(true);
-        userRepository.save(user);
+        update(UserDto.UpdateReqDto.builder().id(id).deleted(true).build());
     }
 
     @Override
