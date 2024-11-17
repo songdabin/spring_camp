@@ -17,6 +17,7 @@
         FROM user
         WHERE user.id is not NULL
         <if test = "deleted != null and deleted !=''">AND user.deleted = #{deleted}</if>
+
         <if test = "name != null and name !=''">AND user.name LIKE CONCAT('%', #{name}, '%')</if>
         <if test = "phone != null and phone !=''">AND user.phone LIKE CONCAT('%', #{phone})</if>
     </select>
@@ -25,19 +26,25 @@
         SELECT user.id
         FROM user
         WHERE user.id is not NULL
-        <if test = "deleted != null and deleted !=''">AND user.deleted = #{deleted}</if>
+        <if test = "deleted != null">AND user.deleted = #{deleted}</if>
+        <if test = "sdate != null and sdate !=''">AND user.created_at >= CONCAT(#{sdate}, ' 00:00:00.000000')</if>
+        <if test = "fdate != null and fdate !=''">AND CONCAT(#{fdate}, ' 23:59:59.999999') >= user.created_at</if>
         <if test = "name != null and name !=''">AND user.name LIKE CONCAT('%', #{name}, '%')</if>
         <if test = "phone != null and phone !=''">AND user.phone LIKE CONCAT('%', #{phone})</if>
         <if test = "orderby != null and orderby =='created_at'">ORDER BY user.created_at</if>
-        <if test = "orderby != null and orderby =='name'">ORDER BY user.name</if>
-        <if test = "orderway != null and orderway =='desc'">DESC</if>
-        <if test = "orderway != null and orderway =='asc'">ASC</if>
+        <if test = "orderby != null and orderby =='title'">ORDER BY user.title </if>
+        <if test = "orderway != null and orderway =='desc'"> DESC</if>
+        <if test = "orderway != null and orderway =='asc'"> ASC</if>
         LIMIT #{offset}, #{perpage}
     </select>
+
     <select id="pagedListCount" parameterType="hashMap" resultType="Integer">
         SELECT count(user.id) as listsize
         FROM user
         WHERE user.id is not NULL
+        <if test = "deleted != null">AND user.deleted = #{deleted}</if>
+        <if test = "sdate != null and sdate !=''">AND user.created_at >= CONCAT(#{sdate}, ' 00:00:00.000000')</if>
+        <if test = "fdate != null and fdate !=''">AND CONCAT(#{fdate}, ' 23:59:59.999999') >= user.created_at</if>
         <if test = "name != null and name !=''">AND user.name LIKE CONCAT('%', #{name}, '%')</if>
         <if test = "phone != null and phone !=''">AND user.phone LIKE CONCAT('%', #{phone})</if>
     </select>
@@ -46,7 +53,8 @@
         SELECT user.id
         FROM user
         WHERE user.id is not NULL
-        <if test = "deleted != null and deleted !=''">AND user.deleted = #{deleted}</if>
+        <if test = "deleted != null">AND user.deleted = #{deleted}</if>
+
         <if test = "name != null and name !=''">AND user.name LIKE CONCAT('%', #{name}, '%')</if>
         <if test = "phone != null and phone !=''">AND user.phone LIKE CONCAT('%', #{phone})</if>
         <if test = "orderway != null and orderway =='desc'">

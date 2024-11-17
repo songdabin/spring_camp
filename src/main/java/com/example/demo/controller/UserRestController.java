@@ -40,14 +40,20 @@ public class UserRestController {
     }
 
     @PutMapping("")
-    public ResponseEntity<String> update(@RequestBody UserDto.UpdateReqDto param) {
+    public ResponseEntity<Void> update(@RequestBody UserDto.UpdateReqDto param) {
         userService.update(param);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("")
-    public ResponseEntity<String> delete(@RequestBody UserDto.UpdateReqDto param){
+    public ResponseEntity<Void> delete(@RequestBody UserDto.UpdateReqDto param){
         userService.delete(param.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/list")
+    public ResponseEntity<Void> deletes(@RequestBody DefaultDto.DeletesReqDto param){
+        userService.deletes(param);
         return ResponseEntity.ok().build();
     }
 

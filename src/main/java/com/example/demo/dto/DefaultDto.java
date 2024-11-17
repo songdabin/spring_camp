@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class DefaultDto {
     @AllArgsConstructor
@@ -23,6 +24,15 @@ public class DefaultDto {
     public static class UpdateReqDto {
         private Long id;
         private Boolean deleted;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @SuperBuilder
+    @Setter
+    @Getter
+    public static class DeletesReqDto {
+        private List<Long> ids;
     }
 
     @AllArgsConstructor
@@ -66,6 +76,8 @@ public class DefaultDto {
         private Integer offset; //몇번째 정보부터 보여줄지
 
         private Boolean deleted;
+        private String sdate; //검색일 시작
+        private String fdate; //검색일 종료
     }
     @AllArgsConstructor @NoArgsConstructor @SuperBuilder @Setter @Getter
     public static class PagedListResDto {

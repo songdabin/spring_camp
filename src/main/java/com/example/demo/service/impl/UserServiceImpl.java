@@ -78,8 +78,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException(""));
+        user.setDeleted(true);
+        userRepository.save(user);
+    }
 
-        userRepository.delete(user);
+    @Override
+    public void deletes(DefaultDto.DeletesReqDto param) {
+        for (Long id : param.getIds()) {
+            delete(id);
+        }
     }
 
     public UserDto.DetailResDto get(Long id) {
