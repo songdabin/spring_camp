@@ -24,10 +24,13 @@ public class NoticeRestController {
     /**/
 
     @PostMapping("")
-    public ResponseEntity<DefaultDto.CreateResDto> create(@RequestPart NoticeDto.CreateReqDto param
+    public ResponseEntity<DefaultDto.CreateResDto> create(
+            @RequestPart NoticeDto.CreateReqDto param
             , @RequestPart(required = false) MultipartFile imgfile
     ){
-        if(imgfile !=null && !imgfile.isEmpty()){param.setImgfile(imgfile);}
+        if(imgfile != null && !imgfile.isEmpty()){
+            param.setImgfile(imgfile);
+        }
         return ResponseEntity.ok(noticeService.create(param));
     }
     @PutMapping("")

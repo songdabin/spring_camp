@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.util.FileUpload;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
@@ -15,6 +16,7 @@ import java.util.Date;
 public class DefaultRestController {
     @PostMapping("/upload")
     public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) throws IOException {
+        /*
         String filename = file.getOriginalFilename();
         System.out.println(filename);
 
@@ -28,7 +30,7 @@ public class DefaultRestController {
         String temp_date = date.getTime() + "";
         String finalName = filePath + temp_date + "_" + filename;
         FileCopyUtils.copy(file.getBytes(), new File(finalName));
-
-        return ResponseEntity.status(HttpStatus.OK).body(temp_date + "_" + filename);
+        */
+        return ResponseEntity.status(HttpStatus.OK).body(FileUpload.upload(file));
     }
 }
